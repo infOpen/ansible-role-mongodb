@@ -41,7 +41,7 @@ def test_ubuntu_community_repository_file_content(SystemInfo, File):
 
     expected_content = (
         'deb http://repo.mongodb.org/apt/{distribution} '
-        '{release}/mongodb-org/testing multiverse'
+        '{release}/mongodb-org/3.2 multiverse'
     ).format(
         distribution=SystemInfo.distribution,
         release=SystemInfo.codename

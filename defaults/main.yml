@@ -7,6 +7,7 @@
 # * community
 # * enterprise
 mongodb_edition: 'community'
+mongodb_version: '3.2'
 
 
 # MongoDB APT installation variables
