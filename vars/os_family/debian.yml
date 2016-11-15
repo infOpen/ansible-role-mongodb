@@ -1,0 +1,7 @@
+---
+
+# Debian OS family specific vars
+
+# Repository variables
+_mongodb_apt_keyserver: 'keyserver.ubuntu.com'
+_mongodb_apt_key: '0C49F3730359A14518585931BC711F9BA15703C6'

@@ -2,3 +2,16 @@
 
 # Defaults vars file for mongodb role
 
+# Choice your MongoDB edition
+# Possible choices:
+# * community
+# * enterprise
+mongodb_edition: 'community'
+
+
+# MongoDB APT installation variables
+mongodb_apt_keyserver: "{{ _mongodb_apt_keyserver | default ('') }}"
+mongodb_apt_key: "{{ _mongodb_apt_key | default('') }}"
+mongodb_apt_file_name: "mongodb-{{ mongodb_edition }}.list"
+mongodb_apt_file_mode: '0644'
+mongodb_apt_entries: "{{ _mongodb_apt_entries | default([]) }}"

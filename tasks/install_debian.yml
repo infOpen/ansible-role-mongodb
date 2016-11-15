@@ -1,0 +1,28 @@
+---
+
+# Debian family installation tasks
+
+- name: 'INSTALL | APT | Add GPG key'
+  become: True
+  apt_key:
+    id: "{{ mongodb_apt_key }}"
+    keyserver: "{{ mongodb_apt_keyserver }}"
+    state: 'present'
+
+
+- name: 'INSTALL | APT | Configure repository'
+  become: True
+  template:
+    src: 'templates/apt_repository.list.j2'
+    dest: "/etc/apt/sources.list.d/{{ mongodb_apt_file_name }}"
+    owner: 'root'
+    group: 'root'
+    mode: "{{ mongodb_apt_file_mode }}"
+  register: 'mongodb_check_repository_file'
+
+
+- name: 'INSTALL | APT | Update cache if repository file updated'
+  become: True
+  apt:
+    update_cache: True
+  when: "{{ mongodb_check_repository_file | changed }}"
