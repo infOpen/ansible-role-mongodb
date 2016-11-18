@@ -23,3 +23,66 @@
   apt:
     update_cache: True
   when: "{{ mongodb_check_repository_file | changed }}"
+
+
+- name: 'INSTALL | APT | Install all packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_all }}"
+  when: "{{ mongodb_install_all }}"
+
+
+- name: 'INSTALL | APT | Install server packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_server }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_server }}"
+
+
+- name: 'INSTALL | APT | Install mongos packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_mongos }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_mongos }}"
+
+
+- name: 'INSTALL | APT | Install shell packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_shell }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_shell }}"
+
+
+- name: 'INSTALL | APT | Install tools packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_tools }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_tools }}"

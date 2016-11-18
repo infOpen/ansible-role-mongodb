@@ -48,3 +48,23 @@ def test_ubuntu_community_repository_file_content(SystemInfo, File):
     )
 
     assert repo_file.contains(expected_content)
+
+
+def test_ubuntu_community_packages(SystemInfo, Package):
+    """
+    Test community packages on Ubuntu distributions
+    """
+
+    if (SystemInfo.distribution != 'ubuntu'):
+        pytest.skip('Not apply to %s' % SystemInfo.distribution)
+
+    packages = [
+        'mongodb-org',
+        'mongodb-org-server',
+        'mongodb-org-mongos',
+        'mongodb-org-shell',
+        'mongodb-org-tools',
+    ]
+
+    for package in packages:
+        assert Package(package).is_installed
