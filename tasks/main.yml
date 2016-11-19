@@ -2,3 +2,10 @@
 
 # Main tasks file for mongodb role
 
+- name: 'INIT | Manage variables to use for our target'
+  include: 'manage_variables.yml'
+
+
+- name: 'INSTALL | Manage installation tasks for your OS family'
+  become: True
+  include: "install_{{ ansible_os_family | lower }}.yml"

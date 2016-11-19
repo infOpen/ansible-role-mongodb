@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+{% for entry in mongodb_apt_entries %}
+{{ entry }}
+{% endfor %}

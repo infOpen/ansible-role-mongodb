@@ -47,6 +47,57 @@ make test-vagrant
 ### Default role variables
 
 ``` yaml
+# Choice your MongoDB edition
+# Possible choices:
+# * community
+# * enterprise
+mongodb_edition: 'community'
+mongodb_version: '3.2'
+
+
+# MongoDB APT installation variables
+mongodb_apt_keyserver: "{{ _mongodb_apt_keyserver | default ('') }}"
+mongodb_apt_key: "{{ _mongodb_apt_key | default('') }}"
+mongodb_apt_file_name: "mongodb-{{ mongodb_edition }}.list"
+mongodb_apt_file_mode: '0644'
+mongodb_apt_entries: "{{ _mongodb_apt_entries | default([]) }}"
+mongodb_apt_update_cache: True
+mongodb_apt_cache_valid_time: 3600
+mongodb_apt_force: True
+
+
+# MongoDB packages
+mongodb_packages_all: "{{ _mongodb_packages_all }}"
+mongodb_packages_server: "{{ _mongodb_packages_server }}"
+mongodb_packages_mongos: "{{ _mongodb_packages_mongos }}"
+mongodb_packages_shell: "{{ _mongodb_packages_shell }}"
+mongodb_packages_tools: "{{ _mongodb_packages_tools }}"
+
+
+# Roles to install
+mongodb_install_all: True
+mongodb_install_server: True
+mongodb_install_mongos: True
+mongodb_install_shell: True
+mongodb_install_tools: True
+```
+
+## How ...
+
+### Install all packages
+
+Only set ***mongodb_install_all*** to ***True***, and role will use meta package.
+It is the default value without custom settings
+
+### Only install some roles
+
+1. Set ***mongodb_install_all*** to ***False***
+2. Set needed roles to ***True*** and ***False*** to others for these items:
+```yaml
+mongodb_install_server: True
+mongodb_install_mongos: True
+mongodb_install_shell: True
+mongodb_install_tools: True
 ```
 
 ## Dependencies
