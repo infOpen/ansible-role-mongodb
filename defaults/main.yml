@@ -35,3 +35,9 @@ mongodb_install_server: True
 mongodb_install_mongos: True
 mongodb_install_shell: True
 mongodb_install_tools: True
+
+
+# Default instance management
+mongodb_default_instance: "{{ _mongodb_default_instance }}"
+mongodb_default_instance_disabled: True
+mongodb_default_instance_removed: False

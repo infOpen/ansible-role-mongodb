@@ -1,9 +1,9 @@
 ---
 
-# Specific Xenial vars
+# Specific Trusty vars
 
 _mongodb_default_instance:
   service_name: 'mongod'
   files:
     - '/etc/mongod.conf'
-    - '/lib/systemd/system/mongod.service'
+    - '/etc/init/mongod.conf'

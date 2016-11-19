@@ -9,3 +9,8 @@
 - name: 'INSTALL | Manage installation tasks for your OS family'
   become: True
   include: "install_{{ ansible_os_family | lower }}.yml"
+
+
+- name: 'CONFIG | Manage default instance'
+  become: True
+  include: 'manage_default_instance.yml'

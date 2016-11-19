@@ -5,7 +5,6 @@ import pytest
 
 # To run all the tests on given docker images:
 pytestmark = pytest.mark.docker_images(
-    'infopen/ubuntu-trusty-ssh:0.1.0',
     'infopen/ubuntu-xenial-ssh-py27:0.2.0'
 )
 
@@ -68,3 +67,20 @@ def test_ubuntu_community_packages(SystemInfo, Package):
 
     for package in packages:
         assert Package(package).is_installed
+
+
+def test_default_instance_service(Command, SystemInfo, Service):
+    """
+    Test default instance service disabled on Ubuntu distributions
+    """
+
+    if SystemInfo.distribution != 'ubuntu':
+        pytest.skip('Not apply to %s' % SystemInfo.distribution)
+
+    assert Service('mongod').is_enabled is False
+
+    if SystemInfo.codename == 'trusty':
+        # On my Trusty service test, return code is 0 when service stopped
+        assert 'mongod stop/waiting' in Command('service mongod status').stdout
+    else:
+        assert Service('mongod').is_running is False
