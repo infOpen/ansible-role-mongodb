@@ -17,3 +17,12 @@ _mongodb_packages_shell:
   - name: 'mongodb-org-shell'
 _mongodb_packages_tools:
   - name: 'mongodb-org-tools'
+
+# Main user variables
+_mongodb_user: 'mongodb'
+_mongodb_group: 'mongodb'
+
+# Path variables
+_mongodb_base_config_path: '/etc/mongodb'
+_mongodb_base_data_path: '/var/lib/mongodb'
+_mongodb_base_log_path: '/var/log/mongodb'

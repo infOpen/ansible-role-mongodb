@@ -41,3 +41,22 @@ mongodb_install_tools: True
 mongodb_default_instance: "{{ _mongodb_default_instance }}"
 mongodb_default_instance_disabled: True
 mongodb_default_instance_removed: False
+
+
+# Main user
+mongodb_user: "{{ _mongodb_user }}"
+mongodb_group: "{{ _mongodb_group }}"
+
+
+# Paths
+mongodb_base_folders_paths:
+  config: "{{ _mongodb_base_config_path | default('') }}"
+  data: "{{ _mongodb_base_data_path | default('') }}"
+  log: "{{ _mongodb_base_log_path | default('') }}"
+
+
+# MongoDB configuration
+mongodb_instances:
+  - type: 'mongod'
+    config: "{{ _mongodb_config_mongod }}"
+    state: 'present'

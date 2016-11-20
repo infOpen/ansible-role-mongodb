@@ -84,3 +84,74 @@ def test_default_instance_service(Command, SystemInfo, Service):
         assert 'mongod stop/waiting' in Command('service mongod status').stdout
     else:
         assert Service('mongod').is_running is False
+
+
+def test_configuration_directory(SystemInfo, File):
+    """
+    Test configuration directory management
+    """
+
+    if (SystemInfo.distribution != 'ubuntu'):
+        pytest.skip('Not apply to %s' % SystemInfo.distribution)
+
+    config_dir = File('/etc/mongodb')
+    assert config_dir.exists
+    assert config_dir.is_directory
+    assert config_dir.user == 'root'
+    assert config_dir.group == 'root'
+    assert config_dir.mode == 0o750
+
+
+def test_configuration_files(SystemInfo, File):
+    """
+    Test configuration files management
+    """
+
+    if (SystemInfo.distribution != 'ubuntu'):
+        pytest.skip('Not apply to %s' % SystemInfo.distribution)
+
+    config_files = [
+        '/etc/mongodb/mongod_27017.conf',
+        '/etc/mongodb/mongos_27018.conf'
+    ]
+
+    for current_file in config_files:
+        config_file = File(current_file)
+        assert config_file.exists
+        assert config_file.is_file
+        assert config_file.user == 'root'
+        assert config_file.group == 'root'
+        assert config_file.mode == 0o400
+
+
+def test_instance_user(User):
+    """
+    Test dedicated instance user
+    """
+
+    user = User('bar')
+
+    assert user.exists
+    assert user.group == 'bar'
+    assert 'mongodb' in user.groups
+    assert user.home == '/home/bar'
+    assert user.shell == '/bin/false'
+
+
+def test_data_directories(SystemInfo, File):
+    """
+    Test data directory management
+    """
+
+    data_directories = [
+        {'path': '/var/lib/mongodb/foo', 'user': 'mongodb'},
+        {'path': '/var/lib/mongodb/bar', 'user': 'bar'},
+    ]
+
+    for current_directory in data_directories:
+        data_directory = File(current_directory['path'])
+        assert data_directory.exists
+        assert data_directory.is_directory
+        assert data_directory.user == current_directory['user']
+        assert data_directory.group == current_directory['user']
+        assert data_directory.mode == 0o750

@@ -1,0 +1,33 @@
+---
+
+mongodb_instances:
+  - type: 'mongod'
+    state: 'present'
+    config:
+      storage:
+        dbPath: "{{ mongodb_base_folders_paths.data }}/foo"
+        journal:
+          enabled: True
+      systemLog:
+        destination: 'file'
+        logAppend: True
+        path: "{{ mongodb_base_folders_paths.log }}/mongod_27017.log"
+      net:
+        port: 27017
+        bindIp: '127.0.0.1'
+  - type: 'mongos'
+    state: 'present'
+    user: 'bar'
+    group: 'bar'
+    config:
+      storage:
+        dbPath: "{{ mongodb_base_folders_paths.data }}/bar"
+        journal:
+          enabled: True
+      systemLog:
+        destination: 'file'
+        logAppend: True
+        path: "{{ mongodb_base_folders_paths.log }}/mongos_27018.log"
+      net:
+        port: 27018
+        bindIp: '127.0.0.1'

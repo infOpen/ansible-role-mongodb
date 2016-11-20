@@ -14,3 +14,8 @@
 - name: 'CONFIG | Manage default instance'
   become: True
   include: 'manage_default_instance.yml'
+
+
+- name: 'CONFIG | Manage user instances'
+  become: True
+  include: 'manage_user_instances.yml'
