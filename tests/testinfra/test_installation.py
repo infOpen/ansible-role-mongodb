@@ -98,7 +98,7 @@ def test_configuration_directory(SystemInfo, File):
     assert config_dir.exists
     assert config_dir.is_directory
     assert config_dir.user == 'root'
-    assert config_dir.group == 'root'
+    assert config_dir.group == 'mongodb'
     assert config_dir.mode == 0o750
 
 
@@ -111,16 +111,16 @@ def test_configuration_files(SystemInfo, File):
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
     config_files = [
-        '/etc/mongodb/mongod_27017.conf',
-        '/etc/mongodb/mongos_27018.conf'
+        {'path': '/etc/mongodb/mongod_27017.conf', 'user': 'mongodb'},
+        {'path': '/etc/mongodb/mongos_27018.conf', 'user': 'bar'}
     ]
 
     for current_file in config_files:
-        config_file = File(current_file)
+        config_file = File(current_file['path'])
         assert config_file.exists
         assert config_file.is_file
-        assert config_file.user == 'root'
-        assert config_file.group == 'root'
+        assert config_file.user == current_file['user']
+        assert config_file.group == current_file['user']
         assert config_file.mode == 0o400
 
 
@@ -155,3 +155,40 @@ def test_data_directories(SystemInfo, File):
         assert data_directory.user == current_directory['user']
         assert data_directory.group == current_directory['user']
         assert data_directory.mode == 0o750
+
+
+def test_upstart_init_files(SystemInfo, File):
+    """
+    Test upstart init files management
+    """
+
+    if (SystemInfo.codename != 'trusty'):
+        pytest.skip('Not apply to %s' % SystemInfo.trusty)
+
+    upstart_files = [
+        '/etc/init/mongod_27017.conf',
+        '/etc/init/mongos_27018.conf'
+    ]
+
+    for current_file in upstart_files:
+        upstart_file = File(current_file)
+        assert upstart_file.exists
+        assert upstart_file.is_file
+        assert upstart_file.user == 'root'
+
+
+def test_upstart_instance_service(Command, SystemInfo, Service):
+    """
+    Test instance upstart service on Ubuntu Trusty
+    """
+
+    if SystemInfo.codename != 'trusty':
+        pytest.skip('Not apply to %s' % SystemInfo.codename)
+
+    assert Service('mongod_27017').is_enabled
+    assert Service('mongos_27018').is_enabled is False
+
+    assert 'mongod_27017 start/running' in \
+        Command('service mongod_27017 status').stdout
+    assert 'mongos_27018 stop/waiting' in \
+        Command('service mongos_27018 status').stdout

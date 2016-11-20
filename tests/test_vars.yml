@@ -17,6 +17,7 @@ mongodb_instances:
         bindIp: '127.0.0.1'
   - type: 'mongos'
     state: 'present'
+    enabled: False
     user: 'bar'
     group: 'bar'
     config:

@@ -53,6 +53,8 @@ mongodb_base_folders_paths:
   config: "{{ _mongodb_base_config_path | default('') }}"
   data: "{{ _mongodb_base_data_path | default('') }}"
   log: "{{ _mongodb_base_log_path | default('') }}"
+  upstart: "{{ _mongodb_base_upstart_path | default('') }}"
+  run: "{{ _mongodb_base_run_path | default('') }}"
 
 
 # MongoDB configuration
@@ -60,3 +62,8 @@ mongodb_instances:
   - type: 'mongod'
     config: "{{ _mongodb_config_mongod }}"
     state: 'present'
+    enabled: True
+
+
+# Services management
+mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(False) }}"

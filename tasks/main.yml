@@ -19,3 +19,8 @@
 - name: 'CONFIG | Manage user instances'
   become: True
   include: 'manage_user_instances.yml'
+
+
+- name: 'CONFIG | Manage services'
+  become: True
+  include: 'manage_services.yml'
