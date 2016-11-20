@@ -2,7 +2,9 @@
 
 {% set instance_user = item.user | default(mongodb_user) %}
 {% set instance_group = item.group | default(mongodb_group) %}
+{% if item.type == 'mongod' %}
 {% set instance_data_dir_path = item.config.storage.dbPath %}
+{% endif %}
 {% set instance_log_dir_path = (item.config.systemLog.path | dirname) %}
 {% set instance_run_dir_path = mongodb_base_folders_paths.run %}
 {% set instance_pid_file_path = (instance_run_dir_path ~ '/' ~ item.type ~ '_' ~ item.config.net.port ~ '.pid') %}
@@ -21,10 +23,12 @@ kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
 
 pre-start script
   DAEMONUSER={{ instance_user }}
+{% if item.type == 'mongod' %}
   if [ ! -d {{ instance_data_dir_path }} ]; then
     mkdir -p {{ instance_data_dir_path }} \
       && chown {{ instance_user }}:{{ instance_user }} {{ instance_data_dir_path }}
   fi
+{% endif %}
   if [ ! -d {{ instance_log_dir_path }} ]; then
     mkdir -p {{ instance_log_dir_path }} \
       && chown {{ instance_user }}:{{ instance_user }} {{ instance_log_dir_path }}

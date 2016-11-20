@@ -112,7 +112,8 @@ def test_configuration_files(SystemInfo, File):
 
     config_files = [
         {'path': '/etc/mongodb/mongod_27017.conf', 'user': 'mongodb'},
-        {'path': '/etc/mongodb/mongos_27018.conf', 'user': 'bar'}
+        {'path': '/etc/mongodb/mongos_27018.conf', 'user': 'bar'},
+        {'path': '/etc/mongodb/mongos_27019.conf', 'user': 'foobar'},
     ]
 
     for current_file in config_files:
@@ -124,18 +125,21 @@ def test_configuration_files(SystemInfo, File):
         assert config_file.mode == 0o400
 
 
-def test_instance_user(User):
+def test_instance_users(User):
     """
     Test dedicated instance user
     """
 
-    user = User('bar')
+    users = ['bar', 'foobar']
 
-    assert user.exists
-    assert user.group == 'bar'
-    assert 'mongodb' in user.groups
-    assert user.home == '/home/bar'
-    assert user.shell == '/bin/false'
+    for user in users:
+        current_user = User(user)
+
+        assert current_user.exists
+        assert current_user.group == user
+        assert 'mongodb' in current_user.groups
+        assert current_user.home == '/home/%s' % user
+        assert current_user.shell == '/bin/false'
 
 
 def test_data_directories(SystemInfo, File):
@@ -146,6 +150,7 @@ def test_data_directories(SystemInfo, File):
     data_directories = [
         {'path': '/var/lib/mongodb/foo', 'user': 'mongodb'},
         {'path': '/var/lib/mongodb/bar', 'user': 'bar'},
+        {'path': '/var/lib/mongodb/foobar', 'user': 'foobar'},
     ]
 
     for current_directory in data_directories:
@@ -167,7 +172,8 @@ def test_upstart_init_files(SystemInfo, File):
 
     upstart_files = [
         '/etc/init/mongod_27017.conf',
-        '/etc/init/mongos_27018.conf'
+        '/etc/init/mongos_27018.conf',
+        '/etc/init/mongos_27019.conf'
     ]
 
     for current_file in upstart_files:
@@ -177,21 +183,28 @@ def test_upstart_init_files(SystemInfo, File):
         assert upstart_file.user == 'root'
 
 
-def test_upstart_instance_service(Command, SystemInfo, Service):
+def test_upstart_instance_services(Command, SystemInfo, Service):
     """
-    Test instance upstart service on Ubuntu Trusty
+    Test instance upstart services on Ubuntu Trusty
     """
 
     if SystemInfo.codename != 'trusty':
         pytest.skip('Not apply to %s' % SystemInfo.codename)
 
-    assert Service('mongod_27017').is_enabled
-    assert Service('mongos_27018').is_enabled is False
+    services = [
+        {'name': 'mongod_27017', 'enabled': True, 'running': True},
+        {'name': 'mongos_27018', 'enabled': False, 'running': False},
+        {'name': 'mongos_27019', 'enabled': True, 'running': True},
+    ]
 
-    assert 'mongod_27017 start/running' in \
-        Command('service mongod_27017 status').stdout
-    assert 'mongos_27018 stop/waiting' in \
-        Command('service mongos_27018 status').stdout
+    for service in services:
+        assert Service(service['name']).is_enabled is service['enabled']
+        if service['running']:
+            assert ('%s start/running' % service['name']) in \
+                Command('service %s status' % service['name']).stdout
+        else:
+            assert ('%s stop/waiting' % service['name']) in \
+                Command('service %s status' % service['name']).stdout
 
 
 def test_systemd_services_files(SystemInfo, File):
@@ -204,7 +217,8 @@ def test_systemd_services_files(SystemInfo, File):
 
     services_files = [
         '/lib/systemd/system/mongod_27017.service',
-        '/lib/systemd/system/mongos_27018.service'
+        '/lib/systemd/system/mongos_27018.service',
+        '/lib/systemd/system/mongos_27019.service'
     ]
 
     for current_file in services_files:
@@ -214,7 +228,7 @@ def test_systemd_services_files(SystemInfo, File):
         assert service_file.user == 'root'
 
 
-def test_systemd_instance_service(Command, SystemInfo, Service):
+def test_systemd_instance_services(Command, SystemInfo, Service):
     """
     Test instance systemd services on Ubuntu Xenial
     """
@@ -222,7 +236,12 @@ def test_systemd_instance_service(Command, SystemInfo, Service):
     if SystemInfo.codename != 'xenial':
         pytest.skip('Not apply to %s' % SystemInfo.codename)
 
-    assert Service('mongod_27017').is_enabled
-    assert Service('mongod_27017').is_running
-    assert Service('mongos_27018').is_enabled is False
-    assert Service('mongos_27018').is_running is False
+    services = [
+        {'name': 'mongod_27017', 'enabled': True, 'running': True},
+        {'name': 'mongos_27018', 'enabled': False, 'running': False},
+        {'name': 'mongos_27019', 'enabled': True, 'running': True},
+    ]
+
+    for service in services:
+        assert Service(service['name']).is_enabled is service['enabled']
+        assert Service(service['name']).is_running is service['running']

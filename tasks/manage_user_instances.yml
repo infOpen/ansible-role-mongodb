@@ -36,6 +36,13 @@
     group: "{{ item.group | default(mongodb_group) }}"
     mode: '0750'
   with_items: "{{ mongodb_instances }}"
+  when: "{{ item.type == 'mongod' }}"
+
+
+- name: 'CONFIG | USER INSTANCES | Ensure log dir is writable for mongodb_group'
+  file:
+    path: "{{ mongodb_base_folders_paths.log }}"
+    mode: 'g+rwx'
 
 
 - name: 'CONFIG | USER INSTANCES | Manage new configuration files'
