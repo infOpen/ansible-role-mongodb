@@ -55,6 +55,7 @@ mongodb_base_folders_paths:
   log: "{{ _mongodb_base_log_path | default('') }}"
   upstart: "{{ _mongodb_base_upstart_path | default('') }}"
   run: "{{ _mongodb_base_run_path | default('') }}"
+  systemd_services: "{{ _mongodb_base_systemd_services_path | default('') }}"
 
 
 # MongoDB configuration
@@ -67,3 +68,4 @@ mongodb_instances:
 
 # Services management
 mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(False) }}"
+mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(False) }}"

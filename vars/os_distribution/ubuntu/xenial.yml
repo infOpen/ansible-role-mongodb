@@ -7,3 +7,6 @@ _mongodb_default_instance:
   files:
     - '/etc/mongod.conf'
     - '/lib/systemd/system/mongod.service'
+
+_mongodb_base_systemd_services_path: '/lib/systemd/system'
+_mongodb_is_systemd_management: True

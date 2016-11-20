@@ -163,7 +163,7 @@ def test_upstart_init_files(SystemInfo, File):
     """
 
     if (SystemInfo.codename != 'trusty'):
-        pytest.skip('Not apply to %s' % SystemInfo.trusty)
+        pytest.skip('Not apply to %s' % SystemInfo.codename)
 
     upstart_files = [
         '/etc/init/mongod_27017.conf',
@@ -192,3 +192,37 @@ def test_upstart_instance_service(Command, SystemInfo, Service):
         Command('service mongod_27017 status').stdout
     assert 'mongos_27018 stop/waiting' in \
         Command('service mongos_27018 status').stdout
+
+
+def test_systemd_services_files(SystemInfo, File):
+    """
+    Test systemd services files management
+    """
+
+    if (SystemInfo.codename != 'xenial'):
+        pytest.skip('Not apply to %s' % SystemInfo.codename)
+
+    services_files = [
+        '/lib/systemd/system/mongod_27017.service',
+        '/lib/systemd/system/mongos_27018.service'
+    ]
+
+    for current_file in services_files:
+        service_file = File(current_file)
+        assert service_file.exists
+        assert service_file.is_file
+        assert service_file.user == 'root'
+
+
+def test_systemd_instance_service(Command, SystemInfo, Service):
+    """
+    Test instance systemd services on Ubuntu Xenial
+    """
+
+    if SystemInfo.codename != 'xenial':
+        pytest.skip('Not apply to %s' % SystemInfo.codename)
+
+    assert Service('mongod_27017').is_enabled
+    assert Service('mongod_27017').is_running
+    assert Service('mongos_27018').is_enabled is False
+    assert Service('mongos_27018').is_running is False

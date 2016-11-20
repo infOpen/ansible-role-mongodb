@@ -1,0 +1,36 @@
+# {{ ansible_managed }}
+
+{% set instance_user = item.user | default(mongodb_user) %}
+{% set instance_group = item.group | default(mongodb_group) %}
+{% set instance_run_dir_path = mongodb_base_folders_paths.run %}
+{% set instance_pid_file_path = (instance_run_dir_path ~ '/' ~ item.type ~ '_' ~ item.config.net.port ~ '.pid') %}
+
+[Unit]
+Description=High-performance, schema-free document-oriented database
+After=network.target
+Documentation=https://docs.mongodb.org/manual
+
+[Service]
+User={{ instance_user }}
+Group={{ instance_group }}
+PIDFile={{ instance_pid_file_path }}
+ExecStart=/usr/bin/{{ item.type }} --quiet --config {{ mongodb_base_folders_paths.config }}/{{ item.type }}_{{ item.config.net.port }}.conf
+# file size
+LimitFSIZE=infinity
+# cpu time
+LimitCPU=infinity
+# virtual memory size
+LimitAS=infinity
+# open files
+LimitNOFILE=64000
+# processes/threads
+LimitNPROC=64000
+# total threads (user+kernel)
+TasksMax=infinity
+TasksAccounting=false
+
+# Recommended limits for for mongod as specified in
+# http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+
+[Install]
+WantedBy=multi-user.target
