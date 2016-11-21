@@ -1,0 +1,66 @@
+---
+
+# Manage new instances configuration
+
+- name: 'CONFIG | USER INSTANCES | Ensure base configuration path exists'
+  file:
+    path: "{{ mongodb_base_folders_paths.config }}"
+    state: 'directory'
+    owner: 'root'
+    group: "{{ mongodb_group }}"
+    mode: '0750'
+
+
+- name: 'CONFIG | USER INSTANCES | Ensure dedicated users exists'
+  user:
+    name: "{{ item.user }}"
+    comment: "MongoDB user for {{ item.type }} instance listening to {{ item.config.net.port }}"
+    createhome: False
+    groups: "{{ mongodb_group }}"
+    home: "/home/{{ item.user }}"
+    remove: "{{ (item.state | default('present')) == 'absent' }}"
+    state: "{{ item.state | default('present') }}"
+    shell: '/bin/false'
+    system: True
+  with_items: "{{ mongodb_instances }}"
+  when:
+    - "{{ item.user is defined }}"
+    - "{{ item.user != '' }}"
+
+
+- name: 'CONFIG | USER INSTANCES | Ensure data path exists'
+  file:
+    path: "{{ item.config.storage.dbPath }}"
+    state: "{{ ((item.state | default('present')) == 'present') | ternary('directory', 'absent') }}"
+    owner: "{{ item.user | default(mongodb_user) }}"
+    group: "{{ item.group | default(mongodb_group) }}"
+    mode: '0750'
+  with_items: "{{ mongodb_instances }}"
+  when: "{{ item.type == 'mongod' }}"
+
+
+- name: 'CONFIG | USER INSTANCES | Ensure log dir is writable for mongodb_group'
+  file:
+    path: "{{ mongodb_base_folders_paths.log }}"
+    mode: 'g+rwx'
+
+
+- name: 'CONFIG | USER INSTANCES | Manage new configuration files'
+  template:
+    src: 'templates/mongo.conf.j2'
+    dest: "{{ mongodb_base_folders_paths.config }}/{{ item.type }}_{{ item.config.net.port }}.conf"
+    owner: "{{ item.user | default(mongodb_user) }}"
+    group: "{{ item.group | default(mongodb_group) }}"
+    mode: '0400'
+  register: 'mongodb_check_configuration_files'
+  with_items: "{{ mongodb_instances }}"
+  when: "{{ (item.state | default('present')) == 'present' }}"
+
+
+- name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'
+  template:
+    src: 'templates/logrotate.j2'
+    dest: "{{ mongodb_base_folders_paths.logrotate }}/mongodb"
+    owner: 'root'
+    group: 'root'
+    mode: '0400'

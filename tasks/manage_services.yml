@@ -1,0 +1,34 @@
+---
+
+# Manage services
+
+- name: 'CONFIG | UPSTART SERVICES | Create init files'
+  template:
+    src: 'services/upstart.conf.j2'
+    dest: "{{ mongodb_base_folders_paths.upstart }}/{{ item.type }}_{{ item.config.net.port }}.conf"
+    owner: 'root'
+    group: 'root'
+    mode: '0400'
+  register: 'mongodb_check_upstart_files'
+  with_items: "{{ mongodb_instances }}"
+  when: "{{ mongodb_is_upstart_management }}"
+
+
+- name: 'CONFIG | SYSTEMD SERVICES | Create services files'
+  template:
+    src: 'services/systemd.service.j2'
+    dest: "{{ mongodb_base_folders_paths.systemd_services }}/{{ item.type }}_{{ item.config.net.port }}.service"
+    owner: 'root'
+    group: 'root'
+    mode: '0400'
+  register: 'mongodb_check_systemd_files'
+  with_items: "{{ mongodb_instances }}"
+  when: "{{ mongodb_is_systemd_management }}"
+
+
+- name: 'CONFIG | ALL SERVICES | Manage services settings'
+  service:
+    name: "{{ item.type }}_{{ item.config.net.port }}"
+    state: "{{ (item.enabled | default(True)) | ternary('started', 'stopped') }}"
+    enabled: "{{ item.enabled | default(True) }}"
+  with_items: "{{ mongodb_instances }}"

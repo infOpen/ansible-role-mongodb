@@ -1,0 +1,18 @@
+---
+
+# Manage default instance
+
+- name: 'CONFIG | DEFAULT INSTANCE | Disable and stop service'
+  service:
+    name: "{{ mongodb_default_instance.service_name }}"
+    enabled: False
+    state: 'stopped'
+  when: "{{ mongodb_default_instance_disabled }}"
+
+
+- name: 'CONFIG | DEFAULT INSTANCE | Remove default instance configuration and service files'
+  file:
+    name: "{{ item }}"
+    state: 'absent'
+  with_items: "{{ mongodb_default_instance.files }}"
+  when: "{{ mongodb_default_instance_removed }}"

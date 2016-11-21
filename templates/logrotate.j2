@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+{% for instance in mongodb_instances %}
+{% if (instance.config.systemLog is defined) and (instance.config.systemLog.path is defined) %}
+{{ instance.config.systemLog.path }} {
+{% for option in mongodb_logrotate_options %}
+    {{ option }}
+{% endfor %}
+    create 640 {{ instance.user | default(mongodb_user) }} {{ instance.group | default(mongodb_group) }}
+}
+
+{% endif %}
+{% endfor %}
