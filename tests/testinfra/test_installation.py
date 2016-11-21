@@ -149,8 +149,6 @@ def test_data_directories(SystemInfo, File):
 
     data_directories = [
         {'path': '/var/lib/mongodb/foo', 'user': 'mongodb'},
-        {'path': '/var/lib/mongodb/bar', 'user': 'bar'},
-        {'path': '/var/lib/mongodb/foobar', 'user': 'foobar'},
     ]
 
     for current_directory in data_directories:
