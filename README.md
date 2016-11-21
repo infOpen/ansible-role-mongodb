@@ -67,6 +67,7 @@ mongodb_apt_force: True
 
 
 # MongoDB packages
+mongodb_additional_packages: "{{ _mongodb_additional_packages }}"
 mongodb_packages_all: "{{ _mongodb_packages_all }}"
 mongodb_packages_server: "{{ _mongodb_packages_server }}"
 mongodb_packages_mongos: "{{ _mongodb_packages_mongos }}"
@@ -75,11 +76,60 @@ mongodb_packages_tools: "{{ _mongodb_packages_tools }}"
 
 
 # Roles to install
+mongodb_install_additional: True
 mongodb_install_all: True
 mongodb_install_server: True
 mongodb_install_mongos: True
 mongodb_install_shell: True
 mongodb_install_tools: True
+
+
+# Default instance management
+mongodb_default_instance: "{{ _mongodb_default_instance }}"
+mongodb_default_instance_disabled: True
+mongodb_default_instance_removed: False
+
+
+# Main user
+mongodb_user: "{{ _mongodb_user }}"
+mongodb_group: "{{ _mongodb_group }}"
+
+
+# Paths
+mongodb_base_folders_paths:
+  config: "{{ _mongodb_os_base_config_path }}/mongodb"
+  data: "{{ _mongodb_os_base_data_path }}/mongodb"
+  log: "{{ _mongodb_os_base_log_path }}/mongodb"
+  logrotate: "{{ _mongodb_os_base_logrotate_path }}"
+  upstart: "{{ _mongodb_os_base_upstart_path | default('') }}"
+  run: "{{ _mongodb_os_base_run_path }}/mongodb"
+  systemd_services: "{{ _mongodb_os_base_systemd_services_path | default('') }}"
+
+
+# MongoDB configuration
+mongodb_instances:
+  - type: 'mongod'
+    config: "{{ _mongodb_config_mongod }}"
+    state: 'present'
+    enabled: True
+
+
+# Services management
+mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(False) }}"
+mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(False) }}"
+
+
+# Logrotate management
+# Create option is manage inside template
+mongodb_logrotate_options:
+  - 'daily'
+  - 'dateext'
+  - 'dateformat _%Y-%m-%d'
+  - 'rotate 31'
+  - 'copytruncate'
+  - 'compress'
+  - 'delaycompress'
+  - 'missingok'
 ```
 
 ## How ...
