@@ -8,5 +8,5 @@ _mongodb_default_instance:
     - '/etc/mongod.conf'
     - '/etc/init/mongod.conf'
 
-_mongodb_base_upstart_path: '/etc/init'
+_mongodb_os_base_upstart_path: '/etc/init'
 _mongodb_is_upstart_management: True

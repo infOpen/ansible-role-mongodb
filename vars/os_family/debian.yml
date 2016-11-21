@@ -25,8 +25,8 @@ _mongodb_user: 'mongodb'
 _mongodb_group: 'mongodb'
 
 # Path variables
-_mongodb_base_config_path: '/etc/mongodb'
-_mongodb_base_data_path: '/var/lib/mongodb'
-_mongodb_base_log_path: '/var/log/mongodb'
-_mongodb_base_logrotate_path: '/etc/logrotate.d'
-_mongodb_base_run_path: '/var/run/mongodb'
+_mongodb_os_base_config_path: '/etc'
+_mongodb_os_base_data_path: '/var/lib'
+_mongodb_os_base_log_path: '/var/log'
+_mongodb_os_base_logrotate_path: '/etc/logrotate.d'
+_mongodb_os_base_run_path: '/var/run'
