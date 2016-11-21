@@ -32,6 +32,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongo instances'
   with_items: "{{ mongodb_packages_all }}"
   when: "{{ mongodb_install_all }}"
 
@@ -43,6 +44,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongod instances'
   with_items: "{{ mongodb_packages_server }}"
   when:
     - "{{ not mongodb_install_all }}"
@@ -56,6 +58,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongos instances'
   with_items: "{{ mongodb_packages_mongos }}"
   when:
     - "{{ not mongodb_install_all }}"

@@ -9,6 +9,7 @@
     owner: 'root'
     group: 'root'
     mode: '0400'
+  register: 'mongodb_check_upstart_files'
   with_items: "{{ mongodb_instances }}"
   when: "{{ mongodb_is_upstart_management }}"
 
@@ -20,6 +21,7 @@
     owner: 'root'
     group: 'root'
     mode: '0400'
+  register: 'mongodb_check_systemd_files'
   with_items: "{{ mongodb_instances }}"
   when: "{{ mongodb_is_systemd_management }}"
 

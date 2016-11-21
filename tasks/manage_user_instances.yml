@@ -52,6 +52,7 @@
     owner: "{{ item.user | default(mongodb_user) }}"
     group: "{{ item.group | default(mongodb_group) }}"
     mode: '0400'
+  register: 'mongodb_check_configuration_files'
   with_items: "{{ mongodb_instances }}"
   when: "{{ (item.state | default('present')) == 'present' }}"
 
