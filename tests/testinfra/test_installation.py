@@ -63,6 +63,7 @@ def test_ubuntu_community_packages(SystemInfo, Package):
         'mongodb-org-mongos',
         'mongodb-org-shell',
         'mongodb-org-tools',
+        'python-pymongo',
     ]
 
     for package in packages:

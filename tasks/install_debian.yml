@@ -25,6 +25,16 @@
   when: "{{ mongodb_check_repository_file | changed }}"
 
 
+- name: 'INSTALL | APT | Install additional packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+  with_items: "{{ mongodb_additional_packages }}"
+  when: "{{ mongodb_install_additional }}"
+
+
 - name: 'INSTALL | APT | Install all packages'
   apt:
     name: "{{ item.name }}"

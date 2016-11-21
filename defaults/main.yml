@@ -22,6 +22,7 @@ mongodb_apt_force: True
 
 
 # MongoDB packages
+mongodb_additional_packages: "{{ _mongodb_additional_packages }}"
 mongodb_packages_all: "{{ _mongodb_packages_all }}"
 mongodb_packages_server: "{{ _mongodb_packages_server }}"
 mongodb_packages_mongos: "{{ _mongodb_packages_mongos }}"
@@ -30,6 +31,7 @@ mongodb_packages_tools: "{{ _mongodb_packages_tools }}"
 
 
 # Roles to install
+mongodb_install_additional: True
 mongodb_install_all: True
 mongodb_install_server: True
 mongodb_install_mongos: True
