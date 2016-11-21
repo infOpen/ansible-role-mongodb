@@ -1,0 +1,101 @@
+---
+
+# Debian family installation tasks
+
+- name: 'INSTALL | APT | Add GPG key'
+  apt_key:
+    id: "{{ mongodb_apt_key }}"
+    keyserver: "{{ mongodb_apt_keyserver }}"
+    state: 'present'
+
+
+- name: 'INSTALL | APT | Configure repository'
+  template:
+    src: 'templates/apt_repository.list.j2'
+    dest: "/etc/apt/sources.list.d/{{ mongodb_apt_file_name }}"
+    owner: 'root'
+    group: 'root'
+    mode: "{{ mongodb_apt_file_mode }}"
+  register: 'mongodb_check_repository_file'
+
+
+- name: 'INSTALL | APT | Update cache if repository file updated'
+  apt:
+    update_cache: True
+  when: "{{ mongodb_check_repository_file | changed }}"
+
+
+- name: 'INSTALL | APT | Install additional packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+  with_items: "{{ mongodb_additional_packages }}"
+  when: "{{ mongodb_install_additional }}"
+
+
+- name: 'INSTALL | APT | Install all packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongo instances'
+  with_items: "{{ mongodb_packages_all }}"
+  when: "{{ mongodb_install_all }}"
+
+
+- name: 'INSTALL | APT | Install server packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongod instances'
+  with_items: "{{ mongodb_packages_server }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_server }}"
+
+
+- name: 'INSTALL | APT | Install mongos packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  notify: 'Restart all mongos instances'
+  with_items: "{{ mongodb_packages_mongos }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_mongos }}"
+
+
+- name: 'INSTALL | APT | Install shell packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_shell }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_shell }}"
+
+
+- name: 'INSTALL | APT | Install tools packages'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+    force: "{{ mongodb_apt_force }}"
+  with_items: "{{ mongodb_packages_tools }}"
+  when:
+    - "{{ not mongodb_install_all }}"
+    - "{{ mongodb_install_tools }}"

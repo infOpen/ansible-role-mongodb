@@ -1,0 +1,37 @@
+---
+
+# Handlers main file for mongodb role
+
+- name: 'Restart all mongo instances'
+  become: True
+  service:
+    name: "{{ item.type }}_{{ item.config.net.port }}"
+    state: 'restarted'
+  with_items: "{{ mongodb_instances }}"
+  when:
+    - "{{ (item.state | default('present')) == 'present' }}"
+    - "{{ item.enabled | default(True) }}"
+
+
+- name: 'Restart all mongod instances'
+  become: True
+  service:
+    name: "{{ item.type }}_{{ item.config.net.port }}"
+    state: 'restarted'
+  with_items: "{{ mongodb_instances }}"
+  when:
+    - "{{ (item.state | default('present')) == 'present' }}"
+    - "{{ item.enabled | default(True) }}"
+    - "{{ item.type == 'mongod' }}"
+
+
+- name: 'Restart all mongos instances'
+  become: True
+  service:
+    name: "{{ item.type }}_{{ item.config.net.port }}"
+    state: 'restarted'
+  with_items: "{{ mongodb_instances }}"
+  when:
+    - "{{ (item.state | default('present')) == 'present' }}"
+    - "{{ item.enabled | default(True) }}"
+    - "{{ item.type == 'mongos' }}"

@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+# MongoDB configuration for {{ item.type }} on port {{ item.config.net.port }}
+
+{{ item.config | to_nice_yaml }}
