@@ -243,3 +243,14 @@ def test_systemd_instance_services(Command, SystemInfo, Service):
     for service in services:
         assert Service(service['name']).is_enabled is service['enabled']
         assert Service(service['name']).is_running is service['running']
+
+
+def test_logrotate_file(SystemInfo, File):
+    """
+    Test logrotate configuration file
+    """
+
+    config_file = File('/etc/logrotate.d/mongodb')
+    assert config_file.exists
+    assert config_file.is_file
+    assert config_file.user == 'root'

@@ -54,3 +54,12 @@
     mode: '0400'
   with_items: "{{ mongodb_instances }}"
   when: "{{ (item.state | default('present')) == 'present' }}"
+
+
+- name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'
+  template:
+    src: 'templates/logrotate.j2'
+    dest: "{{ mongodb_base_folders_paths.logrotate }}/mongodb"
+    owner: 'root'
+    group: 'root'
+    mode: '0400'
