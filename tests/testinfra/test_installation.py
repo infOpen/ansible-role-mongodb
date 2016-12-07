@@ -33,7 +33,7 @@ def test_ubuntu_community_repository_file_content(SystemInfo, File):
     Test community repository file content on Ubuntu distributions
     """
 
-    if (SystemInfo.distribution != 'ubuntu'):
+    if SystemInfo.distribution != 'ubuntu':
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
     repo_file = File('/etc/apt/sources.list.d/mongodb-community.list')
@@ -54,7 +54,7 @@ def test_ubuntu_community_packages(SystemInfo, Package):
     Test community packages on Ubuntu distributions
     """
 
-    if (SystemInfo.distribution != 'ubuntu'):
+    if SystemInfo.distribution != 'ubuntu':
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
     packages = [
@@ -92,7 +92,7 @@ def test_configuration_directory(SystemInfo, File):
     Test configuration directory management
     """
 
-    if (SystemInfo.distribution != 'ubuntu'):
+    if SystemInfo.distribution != 'ubuntu':
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
     config_dir = File('/etc/mongodb')
@@ -108,7 +108,7 @@ def test_configuration_files(SystemInfo, File):
     Test configuration files management
     """
 
-    if (SystemInfo.distribution != 'ubuntu'):
+    if SystemInfo.distribution != 'ubuntu':
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
     config_files = [
@@ -166,7 +166,7 @@ def test_upstart_init_files(SystemInfo, File):
     Test upstart init files management
     """
 
-    if (SystemInfo.codename != 'trusty'):
+    if SystemInfo.codename != 'trusty':
         pytest.skip('Not apply to %s' % SystemInfo.codename)
 
     upstart_files = [
@@ -199,10 +199,10 @@ def test_upstart_instance_services(Command, SystemInfo, Service):
     for service in services:
         assert Service(service['name']).is_enabled is service['enabled']
         if service['running']:
-            assert ('%s start/running' % service['name']) in \
+            assert '%s start/running' % service['name'] in \
                 Command('service %s status' % service['name']).stdout
         else:
-            assert ('%s stop/waiting' % service['name']) in \
+            assert '%s stop/waiting' % service['name'] in \
                 Command('service %s status' % service['name']).stdout
 
 
@@ -211,7 +211,7 @@ def test_systemd_services_files(SystemInfo, File):
     Test systemd services files management
     """
 
-    if (SystemInfo.codename != 'xenial'):
+    if SystemInfo.codename != 'xenial':
         pytest.skip('Not apply to %s' % SystemInfo.codename)
 
     services_files = [
