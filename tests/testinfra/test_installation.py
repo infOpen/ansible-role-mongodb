@@ -17,7 +17,7 @@ def test_community_repository_file(SystemInfo, File):
     os_distribution = SystemInfo.distribution
 
     if os_distribution == 'ubuntu':
-        repo_file_name = '/etc/apt/sources.list.d/mongodb-community.list'
+        repo_file_name = '/etc/apt/sources.list.d/mongodb-org.list'
 
     repo_file = File(repo_file_name)
 
@@ -36,7 +36,7 @@ def test_ubuntu_community_repository_file_content(SystemInfo, File):
     if SystemInfo.distribution != 'ubuntu':
         pytest.skip('Not apply to %s' % SystemInfo.distribution)
 
-    repo_file = File('/etc/apt/sources.list.d/mongodb-community.list')
+    repo_file = File('/etc/apt/sources.list.d/mongodb-org.list')
 
     expected_content = (
         'deb http://repo.mongodb.org/apt/{distribution} '
