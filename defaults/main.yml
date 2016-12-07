@@ -4,11 +4,14 @@
 
 # Choice your MongoDB edition
 # Possible choices:
-# * community
+# * org (community)
 # * enterprise
-mongodb_edition: 'community'
+mongodb_edition: 'org'
 mongodb_version: '3.2'
 
+mongodb_repository_fqdn:
+  org: 'repo.mongodb.org'
+  enterprise: 'repo.mongodb.com'
 
 # MongoDB APT installation variables
 mongodb_apt_keyserver: "{{ _mongodb_apt_keyserver | default ('') }}"

@@ -49,9 +49,9 @@ make test-vagrant
 ``` yaml
 # Choice your MongoDB edition
 # Possible choices:
-# * community
+# * org (community)
 # * enterprise
-mongodb_edition: 'community'
+mongodb_edition: 'org'
 mongodb_version: '3.2'
 
 
