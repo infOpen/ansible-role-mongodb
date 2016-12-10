@@ -57,8 +57,10 @@ endif
 
 test-vagrant: check-vagrant-prerequisites
 test-vagrant:
-	vagrant up
-	vagrant provision
+	ANSIBLE_ROLES_PATH=../ vagrant up
+	ANSIBLE_ROLES_PATH=../ vagrant provision
 	vagrant ssh-config > .vagrant/ssh-config
-	testinfra --hosts=mongodb_trusty --ssh-config=.vagrant/ssh-config --noconftest --sudo
-	testinfra --hosts=mongodb_xenial --ssh-config=.vagrant/ssh-config --noconftest --sudo
+	MONGODB_EDITION=org testinfra --hosts=mongodb-org-trusty --ssh-config=.vagrant/ssh-config --noconftest --sudo
+	MONGODB_EDITION=org testinfra --hosts=mongodb-org-xenial --ssh-config=.vagrant/ssh-config --noconftest --sudo
+	MONGODB_EDITION=enterprise testinfra --hosts=mongodb-ent-trusty --ssh-config=.vagrant/ssh-config --noconftest --sudo
+	MONGODB_EDITION=enterprise testinfra --hosts=mongodb-ent-xenial --ssh-config=.vagrant/ssh-config --noconftest --sudo
