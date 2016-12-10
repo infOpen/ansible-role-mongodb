@@ -2,7 +2,7 @@
 
 # Specific vars common to all Ubuntu releases
 _mongodb_apt_entries:
-  - "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
+  - "deb http://{{ mongodb_repository_fqdn[mongodb_edition] }}/apt/ubuntu {{ ansible_distribution_release }}/mongodb-{{ mongodb_edition }}/{{ mongodb_version }} multiverse"
 
 # Default mongod configuration
 _mongodb_config_mongod:

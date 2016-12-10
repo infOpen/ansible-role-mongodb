@@ -2,11 +2,23 @@
 
 # Role tests
 
-- hosts: 'all'
+# MongoDB community testing
+- hosts: 'org'
   remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
   roles:
     - role: "{{ role_name }}"
   vars:
     role_name: "{{ playbook_dir | basename }}"
   vars_files:
-    - './tests/test_vars.yml'
+    - './tests/test_vars_org.yml'
+
+
+# MongoDB enterprise testing
+- hosts: 'enterprise'
+  remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
+  roles:
+    - role: "{{ role_name }}"
+  vars:
+    role_name: "{{ playbook_dir | basename }}"
+  vars_files:
+    - './tests/test_vars_enterprise.yml'
