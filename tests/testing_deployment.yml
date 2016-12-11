@@ -2,6 +2,17 @@
 
 # Role tests
 
+# Install pip in testing environment because role dependency is not set
+- hosts: 'all'
+  remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
+  tasks:
+    - name: 'Install pip on Debian OS family'
+      apt:
+        name: 'python-pip'
+        state: 'present'
+      when: "{{ (ansible_os_family | lower) == 'debian' }}"
+
+
 # MongoDB community testing
 - hosts: 'org'
   remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"

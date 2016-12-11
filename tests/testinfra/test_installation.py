@@ -63,7 +63,6 @@ def test_ubuntu_packages(SystemInfo, Package):
             'mongodb-org-mongos',
             'mongodb-org-shell',
             'mongodb-org-tools',
-            'python-pymongo',
         ]
     else:
         packages = [
@@ -72,11 +71,18 @@ def test_ubuntu_packages(SystemInfo, Package):
             'mongodb-enterprise-mongos',
             'mongodb-enterprise-shell',
             'mongodb-enterprise-tools',
-            'python-pymongo',
         ]
 
     for package in packages:
         assert Package(package).is_installed
+
+
+def test_pymongo_management(PipPackage):
+    """
+    Test "pymongo" installation with pip
+    """
+
+    assert 'version' in PipPackage.get_packages().get('pymongo')
 
 
 def test_default_instance_service(Command, SystemInfo, Service):
