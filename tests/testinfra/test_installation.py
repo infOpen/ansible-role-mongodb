@@ -1,6 +1,7 @@
 """
 Role tests
 """
+import json
 import os
 import pytest
 
@@ -303,3 +304,27 @@ def test_logrotate_file(SystemInfo, File):
     assert config_file.exists
     assert config_file.is_file
     assert config_file.user == 'root'
+
+
+def test_mongodb_users(Command):
+    """
+    Test if MongoDB users created
+    """
+
+    users = [
+        {'name': 'foo', 'database': 'admin'},
+        {'name': 'foobar', 'database': 'foobar_db'},
+    ]
+
+    if 'org' in os.getenv('MONGODB_EDITION'):
+        host = 'localhost:27017'
+    else:
+        host = 'localhost:27020'
+
+
+    for user in users:
+        result = json.loads(Command(
+            "mongo {}/{} --quiet --eval 'printjson(db.getUsers())'".format(host, user['database'])).stdout)
+        assert result[0]['_id'] == "{}.{}".format(user['database'], user['name'])
+        assert result[0]['db'] == user['database']
+        assert result[0]['user'] == user['name']
