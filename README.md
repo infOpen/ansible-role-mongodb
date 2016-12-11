@@ -100,6 +100,10 @@ mongodb_user: "{{ _mongodb_user }}"
 mongodb_group: "{{ _mongodb_group }}"
 
 
+# MongoDB databases users
+mongodb_users: []
+
+
 # Paths
 mongodb_base_folders_paths:
   config: "{{ _mongodb_os_base_config_path }}/mongodb"
@@ -150,6 +154,12 @@ Change nothing if you want this install method.
 
 If you need os version, set "mongodb_install_pymongo_method" to "os" to use the
 OS package instead.
+
+### Manage databases users
+
+You can defined users into "mongodb_users" variable.
+
+Settings are the same than "mongodb_user" Ansible module.
 
 ### Install all packages
 

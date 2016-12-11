@@ -58,6 +58,10 @@ mongodb_user: "{{ _mongodb_user }}"
 mongodb_group: "{{ _mongodb_group }}"
 
 
+# MongoDB databases users
+mongodb_users: []
+
+
 # Paths
 mongodb_base_folders_paths:
   config: "{{ _mongodb_os_base_config_path }}/mongodb"
