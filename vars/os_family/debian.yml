@@ -7,7 +7,7 @@ _mongodb_apt_keyserver: 'keyserver.ubuntu.com'
 _mongodb_apt_key: '0C49F3730359A14518585931BC711F9BA15703C6'
 
 # Packages variables
-_mongodb_additional_packages:
+_mongodb_os_packages_pymongo:
   - name: 'python-pymongo'
 _mongodb_packages_all:
   - name: "mongodb-{{ mongodb_edition }}"

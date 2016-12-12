@@ -48,3 +48,15 @@ mongodb_instances:
       net:
         port: 27022
         bindIp: '127.0.0.1'
+mongodb_users:
+  - user: 'foo'
+    password: 'bar'
+    database: 'admin'
+    login_port: 27020
+  - user: 'foobar'
+    password: 'bar'
+    database: 'foobar_db'
+    login_port: 27020
+    login_user: 'foo'
+    login_password: 'bar'
+    login_database: 'admin'

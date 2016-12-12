@@ -39,3 +39,22 @@
     - "{{ item.0.changed or item.1.changed or item.2.changed }}"
     - "{{ (item.0.item.state | default('present')) == 'present' }}"
     - "{{ item.0.item.enabled | default(True) }}"
+
+
+- name: 'USER | Manage users'
+  become: True
+  no_log: True
+  mongodb_user:
+    login_database: "{{ item.login_database | default(omit) }}"
+    login_host: "{{ item.login_host | default(omit) }}"
+    login_password: "{{ item.login_password | default(omit) }}"
+    login_port: "{{ item.login_port | default(omit) }}"
+    login_user: "{{ item.login_user | default(omit) }}"
+    database: "{{ item.database }}"
+    user: "{{ item.user }}"
+    password: "{{ item.password | default(omit) }}"
+    replicat_set: "{{ item.replicat_set | default(omit) }}"
+    roles: "{{ item.roles | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    update_password: "{{ item.update_password | default('always') }}"
+  with_items: "{{ mongodb_users }}"

@@ -66,8 +66,13 @@ mongodb_apt_cache_valid_time: 3600
 mongodb_apt_force: True
 
 
+# Pymongo management
+mongodb_os_packages_pymongo: "{{ _mongodb_os_packages_pymongo }}"
+mongodb_pip_packages_pymongo:
+  - name: 'pymongo'
+
+
 # MongoDB packages
-mongodb_additional_packages: "{{ _mongodb_additional_packages }}"
 mongodb_packages_all: "{{ _mongodb_packages_all }}"
 mongodb_packages_server: "{{ _mongodb_packages_server }}"
 mongodb_packages_mongos: "{{ _mongodb_packages_mongos }}"
@@ -93,6 +98,10 @@ mongodb_default_instance_removed: False
 # Main user
 mongodb_user: "{{ _mongodb_user }}"
 mongodb_group: "{{ _mongodb_group }}"
+
+
+# MongoDB databases users
+mongodb_users: []
 
 
 # Paths
@@ -133,6 +142,24 @@ mongodb_logrotate_options:
 ```
 
 ## How ...
+
+### Manage "pymongo" install
+
+By default, "pymongo" is installed by pip, to have a compatible version with
+newest MongoDB packages.
+
+> ***Warning***: This role not manage pip install, so you need to manage this !
+
+Change nothing if you want this install method.
+
+If you need os version, set "mongodb_install_pymongo_method" to "os" to use the
+OS package instead.
+
+### Manage databases users
+
+You can defined users into "mongodb_users" variable.
+
+Settings are the same than "mongodb_user" Ansible module.
 
 ### Install all packages
 
