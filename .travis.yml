@@ -18,10 +18,14 @@ env:
     - ANSIBLE_ROLES_PATH="${TRAVIS_BUILD_DIR%/*/*}"
 
   matrix:
-    - TOXENV='py27-ansible20'
-    - TOXENV='py27-ansible21'
-    - TOXENV='py27-ansible22'
-    - TOXENV='py27-ansible-devel'
+    - TOXENV='py27-ansible20-org'
+    - TOXENV='py27-ansible20-enterprise'
+    - TOXENV='py27-ansible21-org'
+    - TOXENV='py27-ansible21-enterprise'
+    - TOXENV='py27-ansible22-org'
+    - TOXENV='py27-ansible22-enterprise'
+    - TOXENV='py27-ansible-devel-org'
+    - TOXENV='py27-ansible-devel-enterprise'
 
 before_install:
   # Create SSH keys

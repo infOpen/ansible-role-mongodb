@@ -2,11 +2,34 @@
 
 # Role tests
 
+# Install pip in testing environment because role dependency is not set
 - hosts: 'all'
+  remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
+  tasks:
+    - name: 'Install pip on Debian OS family'
+      apt:
+        name: 'python-pip'
+        state: 'present'
+      when: "{{ (ansible_os_family | lower) == 'debian' }}"
+
+
+# MongoDB community testing
+- hosts: 'org'
   remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
   roles:
     - role: "{{ role_name }}"
   vars:
     role_name: "{{ playbook_dir | basename }}"
   vars_files:
-    - './tests/test_vars.yml'
+    - './tests/test_vars_org.yml'
+
+
+# MongoDB enterprise testing
+- hosts: 'enterprise'
+  remote_user: "{{ lookup('env', 'VAGRANT') == 'true' | ternary('vagrant', 'root') }}"
+  roles:
+    - role: "{{ role_name }}"
+  vars:
+    role_name: "{{ playbook_dir | basename }}"
+  vars_files:
+    - './tests/test_vars_enterprise.yml'

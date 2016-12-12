@@ -25,14 +25,22 @@
   when: "{{ mongodb_check_repository_file | changed }}"
 
 
-- name: 'INSTALL | APT | Install additional packages'
+- name: 'INSTALL | APT | Install "pymongo"'
   apt:
     name: "{{ item.name }}"
     version: "{{ item.version | default(omit) }}"
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
-  with_items: "{{ mongodb_additional_packages }}"
-  when: "{{ mongodb_install_additional }}"
+  with_items: "{{ mongodb_os_packages_pymongo }}"
+  when: "{{ mongodb_install_pymongo_method == 'os' }}"
+
+
+- name: 'INSTALL | PIP | Install pymongo'
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  with_items: "{{ mongodb_pip_packages_pymongo }}"
+  when: "{{ mongodb_install_pymongo_method == 'pip' }}"
 
 
 - name: 'INSTALL | APT | Install all packages'

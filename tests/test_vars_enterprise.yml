@@ -1,0 +1,62 @@
+---
+
+mongodb_edition: 'enterprise'
+mongodb_instances:
+  - type: 'mongod'
+    state: 'present'
+    config:
+      storage:
+        dbPath: "{{ mongodb_base_folders_paths.data }}/foo-ent"
+        journal:
+          enabled: True
+      systemLog:
+        destination: 'file'
+        logAppend: True
+        path: "{{ mongodb_base_folders_paths.log }}/mongod_27020.log"
+      net:
+        port: 27020
+        bindIp: '127.0.0.1'
+  - type: 'mongos'
+    state: 'present'
+    enabled: False
+    user: 'bar'
+    group: 'bar'
+    config:
+      storage:
+        dbPath: "{{ mongodb_base_folders_paths.data }}/bar-ent"
+        journal:
+          enabled: True
+      systemLog:
+        destination: 'file'
+        logAppend: True
+        path: "{{ mongodb_base_folders_paths.log }}/mongos_27021.log"
+      net:
+        port: 27021
+        bindIp: '127.0.0.1'
+  - type: 'mongos'
+    state: 'present'
+    enabled: True
+    user: 'foobar'
+    group: 'foobar'
+    config:
+      sharding:
+        configDB: 'localhost:27022'
+      systemLog:
+        destination: 'file'
+        logAppend: True
+        path: "{{ mongodb_base_folders_paths.log }}/mongos_27022.log"
+      net:
+        port: 27022
+        bindIp: '127.0.0.1'
+mongodb_users:
+  - user: 'foo'
+    password: 'bar'
+    database: 'admin'
+    login_port: 27020
+  - user: 'foobar'
+    password: 'bar'
+    database: 'foobar_db'
+    login_port: 27020
+    login_user: 'foo'
+    login_password: 'bar'
+    login_database: 'admin'
