@@ -4,7 +4,7 @@
 
 - name: 'CONFIG | UPSTART SERVICES | Create init files'
   template:
-    src: 'services/upstart.conf.j2'
+    src: "{{ role_path }}/templates/services/upstart.conf.j2"
     dest: "{{ mongodb_base_folders_paths.upstart }}/{{ item.type }}_{{ item.config.net.port }}.conf"
     owner: 'root'
     group: 'root'
@@ -16,7 +16,7 @@
 
 - name: 'CONFIG | SYSTEMD SERVICES | Create services files'
   template:
-    src: 'services/systemd.service.j2'
+    src: "{{ role_path }}/templates/services/systemd.service.j2"
     dest: "{{ mongodb_base_folders_paths.systemd_services }}/{{ item.type }}_{{ item.config.net.port }}.service"
     owner: 'root'
     group: 'root'

@@ -11,7 +11,7 @@
 
 - name: 'INSTALL | APT | Configure repository'
   template:
-    src: 'templates/apt_repository.list.j2'
+    src: "{{ role_path }}/templates/apt_repository.list.j2"
     dest: "/etc/apt/sources.list.d/{{ mongodb_apt_file_name }}"
     owner: 'root'
     group: 'root'

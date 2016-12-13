@@ -47,7 +47,7 @@
 
 - name: 'CONFIG | USER INSTANCES | Manage new configuration files'
   template:
-    src: 'templates/mongo.conf.j2'
+    src: "{{ role_path }}/templates/mongo.conf.j2"
     dest: "{{ mongodb_base_folders_paths.config }}/{{ item.type }}_{{ item.config.net.port }}.conf"
     owner: "{{ item.user | default(mongodb_user) }}"
     group: "{{ item.group | default(mongodb_group) }}"
@@ -59,7 +59,7 @@
 
 - name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'
   template:
-    src: 'templates/logrotate.j2'
+    src: "{{ role_path }}/templates/logrotate.j2"
     dest: "{{ mongodb_base_folders_paths.logrotate }}/mongodb"
     owner: 'root'
     group: 'root'

@@ -3,27 +3,27 @@
 # Main tasks file for mongodb role
 
 - name: 'INIT | Manage variables to use for our target'
-  include: 'manage_variables.yml'
+  include: "{{ role_path }}/tasks/manage_variables.yml"
 
 
 - name: 'INSTALL | Manage installation tasks for your OS family'
   become: True
-  include: "install_{{ ansible_os_family | lower }}.yml"
+  include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
 
 
 - name: 'CONFIG | Manage default instance'
   become: True
-  include: 'manage_default_instance.yml'
+  include: "{{ role_path }}/tasks/manage_default_instance.yml"
 
 
 - name: 'CONFIG | Manage user instances'
   become: True
-  include: 'manage_user_instances.yml'
+  include: "{{ role_path }}/tasks/manage_user_instances.yml"
 
 
 - name: 'CONFIG | Manage services'
   become: True
-  include: 'manage_services.yml'
+  include: "{{ role_path }}/tasks/manage_services.yml"
 
 
 - name: 'CONFIG | Restart instance if change occured'
