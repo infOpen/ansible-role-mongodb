@@ -24,8 +24,8 @@
     system: True
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ item.user is defined }}"
-    - "{{ item.user != '' }}"
+    - "{{ item.user is defined }}"
+    - "{{ item.user != '' }}"
 
 
 - name: 'CONFIG | USER INSTANCES | Ensure data path exists'
