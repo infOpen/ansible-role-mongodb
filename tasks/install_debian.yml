@@ -19,7 +19,7 @@
   register: 'mongodb_check_repository_file'
 
 
-- name: 'INSTALL | APT | Update cache if repository file updated'
+- name: 'INSTALL | APT | Update cache if repository file updated'
   apt:
     update_cache: True
   when: "{{ mongodb_check_repository_file | changed }}"
