@@ -6,22 +6,22 @@
   include: "{{ role_path }}/tasks/manage_variables.yml"
 
 
-- name: 'INSTALL | Manage installation tasks for your OS family'
+- name: 'INSTALL | Manage installation tasks for your OS family'
   become: True
   include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
 
 
-- name: 'CONFIG | Manage default instance'
+- name: 'CONFIG | Manage default instance'
   become: True
   include: "{{ role_path }}/tasks/manage_default_instance.yml"
 
 
-- name: 'CONFIG | Manage user instances'
+- name: 'CONFIG | Manage user instances'
   become: True
   include: "{{ role_path }}/tasks/manage_user_instances.yml"
 
 
-- name: 'CONFIG | Manage services'
+- name: 'CONFIG | Manage services'
   become: True
   include: "{{ role_path }}/tasks/manage_services.yml"
 
