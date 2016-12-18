@@ -32,3 +32,23 @@
     state: "{{ (item.enabled | default(True)) | ternary('started', 'stopped') }}"
     enabled: "{{ item.enabled | default(True) }}"
   with_items: "{{ mongodb_instances }}"
+
+
+- name: 'CONFIG | HUGEPAGE SERVICE | Create service file'
+  template:
+    src: "{{ role_path }}/templates/services/initd_hugepage.j2"
+    dest: "{{ mongodb_base_folders_paths.initd }}/initd_hugepage"
+    owner: 'root'
+    group: 'root'
+    mode: '0700'
+  register: 'mongodb_check_hugepage_service_file'
+  when: "{{ mongodb_manage_hugepage_settings }}"
+
+
+- name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings'
+  service:
+    name: 'initd_hugepage'
+    state: 'started'
+    enabled: True
+  register: 'mongodb_check_hugepage_service_state'
+  when: "{{ mongodb_manage_hugepage_settings }}"

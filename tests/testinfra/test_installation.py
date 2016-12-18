@@ -301,6 +301,46 @@ def test_systemd_instance_services(Command, SystemInfo, Service):
         assert Service(service['name']).is_running is service['running']
 
 
+def test_hugepage_service_file(File):
+    """
+    Test hugepage initd service file management
+    """
+
+    service_file = File('/etc/init.d/initd_hugepage')
+
+    assert service_file.exists
+    assert service_file.is_file
+    assert service_file.user == 'root'
+
+
+def test_hugepage_service_state(Service):
+    """
+    Test hugepage initd service state
+    """
+
+    service = Service('initd_hugepage')
+
+    assert service.is_enabled
+    assert service.is_running
+
+
+def test_hugepage_setting_value(SystemInfo, File):
+    """
+    Test if kernel hugepage setting have recommended value
+    """
+
+    if SystemInfo.distribution != 'ubuntu':
+        pytest.skip('Not apply to %s' % SystemInfo.distribution)
+
+    setting_paths = [
+        '/sys/kernel/mm/transparent_hugepage/enabled',
+        '/sys/kernel/mm/transparent_hugepage/defrag',
+    ]
+
+    for setting_path in setting_paths:
+        assert '[never]' in File(setting_path).content_string
+
+
 def test_logrotate_file(SystemInfo, File):
     """
     Test logrotate configuration file
@@ -326,7 +366,6 @@ def test_mongodb_users(Command):
         host = 'localhost:27017'
     else:
         host = 'localhost:27020'
-
 
     for user in users:
         result = json.loads(Command(

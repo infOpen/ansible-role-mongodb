@@ -66,6 +66,7 @@ mongodb_users: []
 mongodb_base_folders_paths:
   config: "{{ _mongodb_os_base_config_path }}/mongodb"
   data: "{{ _mongodb_os_base_data_path }}/mongodb"
+  initd: "{{ _mongodb_os_base_initd_path }}"
   log: "{{ _mongodb_os_base_log_path }}/mongodb"
   logrotate: "{{ _mongodb_os_base_logrotate_path }}"
   upstart: "{{ _mongodb_os_base_upstart_path | default('') }}"
@@ -84,6 +85,10 @@ mongodb_instances:
 # Services management
 mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(False) }}"
 mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(False) }}"
+
+
+# Manage hugepage settings to prevent MongoDB warnings
+mongodb_manage_hugepage_settings: True
 
 
 # Logrotate management
