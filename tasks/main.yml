@@ -36,7 +36,13 @@
     - "{{ mongodb_check_upstart_files.results }}"
     - "{{ mongodb_check_systemd_files.results }}"
   when:
-    - "{{ item.0.changed or item.1.changed or item.2.changed }}"
+    - "{{
+          item.0.changed
+          or item.1.changed
+          or item.2.changed
+          or mongodb_check_hugepage_service_file.changed
+          or mongodb_check_hugepage_service_state.changed
+      }}"
     - "{{ (item.0.item.state | default('present')) == 'present' }}"
     - "{{ item.0.item.enabled | default(True) }}"
 

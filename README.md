@@ -108,6 +108,7 @@ mongodb_users: []
 mongodb_base_folders_paths:
   config: "{{ _mongodb_os_base_config_path }}/mongodb"
   data: "{{ _mongodb_os_base_data_path }}/mongodb"
+  initd: "{{ _mongodb_os_base_initd_path }}"
   log: "{{ _mongodb_os_base_log_path }}/mongodb"
   logrotate: "{{ _mongodb_os_base_logrotate_path }}"
   upstart: "{{ _mongodb_os_base_upstart_path | default('') }}"
@@ -128,6 +129,10 @@ mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(Fals
 mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(False) }}"
 
 
+# Manage hugepage settings to prevent MongoDB warnings
+mongodb_manage_hugepage_settings: True
+
+
 # Logrotate management
 # Create option is manage inside template
 mongodb_logrotate_options:
@@ -142,6 +147,17 @@ mongodb_logrotate_options:
 ```
 
 ## How ...
+
+### Manage hugepage kernel settings with MongoDB recommendation
+
+By default, this role manage these settings to set MongoDB recommendation:
+* /sys/kernel/mm/transparent_hugepage/enable: never
+* /sys/kernel/mm/transparent_hugepage/defrag: never
+
+It's a new init.d service configured to start before MongoDB instances.
+
+If you want to turn off this feature, just set mongodb_manage_hugepage_settings
+to False.
 
 ### Manage "pymongo" install
 
