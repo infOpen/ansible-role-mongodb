@@ -306,7 +306,7 @@ def test_hugepage_service_file(File):
     Test hugepage initd service file management
     """
 
-    service_file = File('/etc/init.d/initd_hugepage')
+    service_file = File('/etc/init.d/disable-transparent-hugepages')
 
     assert service_file.exists
     assert service_file.is_file
@@ -318,7 +318,7 @@ def test_hugepage_service_state(Service):
     Test hugepage initd service state
     """
 
-    service = Service('initd_hugepage')
+    service = Service('disable-transparent-hugepages')
 
     assert service.is_enabled
     assert service.is_running
