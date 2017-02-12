@@ -33,10 +33,11 @@
     state: 'restarted'
   with_together:
     - "{{ mongodb_check_configuration_files.results }}"
+    - "{{ mongodb_check_key_files.results }}"
     - "{{ mongodb_check_upstart_files.results }}"
     - "{{ mongodb_check_systemd_files.results }}"
   when:
-    - "{{ item.0.changed or item.1.changed or item.2.changed }}"
+    - "{{ item.0.changed or item.1.changed or item.2.changed or item.3.changed }}"
     - "{{ (item.0.item.state | default('present')) == 'present' }}"
     - "{{ item.0.item.enabled | default(True) }}"
 
