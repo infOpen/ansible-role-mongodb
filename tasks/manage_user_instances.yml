@@ -57,6 +57,20 @@
   when: "{{ (item.state | default('present')) == 'present' }}"
 
 
+- name: 'CONFIG | USER INSTANCES | Manage authentication_key files'
+  template:
+    src: "{{ role_path }}/templates/keyfile.j2"
+    dest: "{{ mongodb_base_folders_paths.config }}/{{ item.type }}_{{ item.config.net.port }}.key"
+    owner: "{{ item.user | default(mongodb_user) }}"
+    group: "{{ item.group | default(mongodb_group) }}"
+    mode: '0400'
+  register: 'mongodb_check_key_files'
+  with_items: "{{ mongodb_instances }}"
+  when:
+    - "{{ (item.state | default('present')) == 'present' }}"
+    - "{{ (item.authentication_key | default('')) != '' }}"
+
+
 - name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'
   template:
     src: "{{ role_path }}/templates/logrotate.j2"

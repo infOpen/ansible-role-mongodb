@@ -129,14 +129,20 @@ def test_configuration_files(SystemInfo, File):
     if 'org' in os.getenv('MONGODB_EDITION'):
         config_files = [
             {'path': '/etc/mongodb/mongod_27017.conf', 'user': 'mongodb'},
+            {'path': '/etc/mongodb/mongod_27017.key', 'user': 'mongodb'},
             {'path': '/etc/mongodb/mongos_27018.conf', 'user': 'bar'},
+            {'path': '/etc/mongodb/mongos_27018.key', 'user': 'bar'},
             {'path': '/etc/mongodb/mongos_27019.conf', 'user': 'foobar'},
+            {'path': '/etc/mongodb/mongos_27019.key', 'user': 'foobar'},
         ]
     else:
         config_files = [
             {'path': '/etc/mongodb/mongod_27020.conf', 'user': 'mongodb'},
+            {'path': '/etc/mongodb/mongod_27020.key', 'user': 'mongodb'},
             {'path': '/etc/mongodb/mongos_27021.conf', 'user': 'bar'},
+            {'path': '/etc/mongodb/mongos_27021.key', 'user': 'bar'},
             {'path': '/etc/mongodb/mongos_27022.conf', 'user': 'foobar'},
+            {'path': '/etc/mongodb/mongos_27022.key', 'user': 'foobar'},
         ]
 
     for current_file in config_files:
