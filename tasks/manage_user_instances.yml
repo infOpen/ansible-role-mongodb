@@ -68,7 +68,7 @@
   with_items: "{{ mongodb_instances }}"
   when:
     - "{{ (item.state | default('present')) == 'present' }}"
-    - "{{ (item.authentication_key | default('')) =! '' }}"
+    - "{{ (item.authentication_key | default('')) != '' }}"
 
 
 - name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'
