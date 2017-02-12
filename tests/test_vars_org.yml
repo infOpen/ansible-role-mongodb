@@ -3,6 +3,7 @@
 mongodb_instances:
   - type: 'mongod'
     state: 'present'
+    authentication_key: 'foo'
     config:
       storage:
         dbPath: "{{ mongodb_base_folders_paths.data }}/foo"
@@ -18,6 +19,7 @@ mongodb_instances:
   - type: 'mongos'
     state: 'present'
     enabled: False
+    authentication_key: 'foo'
     user: 'bar'
     group: 'bar'
     config:
@@ -35,6 +37,7 @@ mongodb_instances:
   - type: 'mongos'
     state: 'present'
     enabled: True
+    authentication_key: 'foo'
     user: 'foobar'
     group: 'foobar'
     config:
