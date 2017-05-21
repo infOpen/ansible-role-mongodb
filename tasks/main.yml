@@ -52,6 +52,7 @@
 - name: 'USER | Manage users'
   become: True
   no_log: True
+  changed_when: "{{ mongodb_users_changed_when }}"
   mongodb_user:
     login_database: "{{ item.login_database | default(omit) }}"
     login_host: "{{ item.login_host | default(omit) }}"
