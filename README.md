@@ -1,6 +1,10 @@
 # mongodb
 
-[![Build Status](https://travis-ci.org/infOpen/ansible-role-mongodb.svg?branch=master)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-mongodb/master.svg?label=travis_master)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-mongodb/develop.svg?label=travis_develop)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Updates](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/)
+[![Python 3](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/python-3-shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/)
+[![Ansible Role](https://img.shields.io/ansible/role/13906.svg)](https://galaxy.ansible.com/infOpen/mongodb/)
 
 Install mongodb package.
 
