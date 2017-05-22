@@ -12,16 +12,11 @@ language: 'python'
 
 env:
   matrix:
-    - TOXENV='py27-ansible20-org'
-    - TOXENV='py27-ansible20-enterprise'
-    - TOXENV='py27-ansible21-org'
-    - TOXENV='py27-ansible21-enterprise'
-    - TOXENV='py27-ansible22-org'
-    - TOXENV='py27-ansible22-enterprise'
-    - TOXENV='py27-ansible23-org'
-    - TOXENV='py27-ansible23-enterprise'
-    - TOXENV='py27-ansible-devel-org'
-    - TOXENV='py27-ansible-devel-enterprise'
+    - TOXENV='py27-ansible20'
+    - TOXENV='py27-ansible21'
+    - TOXENV='py27-ansible22'
+    - TOXENV='py27-ansible23'
+    - TOXENV='py27-ansible-devel'
 
 before_install:
   - 'sudo apt-get update -qq'
