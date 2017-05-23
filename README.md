@@ -1,6 +1,10 @@
 # mongodb
 
-[![Build Status](https://travis-ci.org/infOpen/ansible-role-mongodb.svg?branch=master)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-mongodb/master.svg?label=travis_master)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-mongodb/develop.svg?label=travis_develop)](https://travis-ci.org/infOpen/ansible-role-mongodb)
+[![Updates](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/)
+[![Python 3](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/python-3-shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-mongodb/)
+[![Ansible Role](https://img.shields.io/ansible/role/13906.svg)](https://galaxy.ansible.com/infOpen/mongodb/)
 
 Install mongodb package.
 
@@ -11,35 +15,32 @@ and platform requirements are listed in the metadata file.
 
 ## Testing
 
-This role has some testing methods.
+This role use [Molecule](https://github.com/metacloud/molecule/) to run tests.
 
-To use locally testing methods, you need to install Docker and/or Vagrant and Python requirements:
+Locally, you can run tests on Docker (default driver) or Vagrant.
+Travis run tests using Docker driver only.
 
-* Create and activate a virtualenv
-* Install requirements
+Currently, tests are done on:
+- Ubuntu Xenial
 
-```
-pip install -r requirements_dev.txt
-```
+and use:
+- Ansible 2.0.x
+- Ansible 2.1.x
+- Ansible 2.2.x
+- Ansible 2.3.x
 
-### Automatically with Travis
+### Running tests
 
-Tests runs automatically on Travis on push, release, pr, ... using docker testing containers
-
-### Locally with Docker
-
-You can use Docker to run tests on ephemeral containers.
-
-```
-make test-docker
-```
-
-### Locally with Vagrant
-
-You can use Vagrant to run tests on virtual machines.
+#### Using Docker driver
 
 ```
-make test-vagrant
+$ tox
+```
+
+#### Using Vagrant driver
+
+```
+$ MOLECULE_DRIVER=vagrant tox
 ```
 
 ## Role Variables
@@ -199,9 +200,11 @@ None
 
 ## Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: infOpen.mongodb }
+``` yaml
+- hosts: servers
+  roles:
+    - { role: infOpen.mongodb }
+```
 
 ## License
 
@@ -212,4 +215,3 @@ MIT
 Alexandre Chaussier (for Infopen company)
 - http://www.infopen.pro
 - a.chaussier [at] infopen.pro
-
