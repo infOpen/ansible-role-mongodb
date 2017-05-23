@@ -7,7 +7,7 @@
 # * org (community)
 # * enterprise
 mongodb_edition: 'org'
-mongodb_version: '3.2'
+mongodb_version: '3.4'
 
 mongodb_repository_fqdn:
   org: 'repo.mongodb.org'
@@ -60,6 +60,7 @@ mongodb_group: "{{ _mongodb_group }}"
 
 # MongoDB databases users
 mongodb_users: []
+mongodb_users_changed_when: omit
 
 
 # Paths

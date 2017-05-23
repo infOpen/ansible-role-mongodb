@@ -1,0 +1,131 @@
+---
+
+ansible:
+  extra_vars:
+    ansible_python_interpreter: '/usr/bin/env python2.7'
+  raw_env_vars:
+    ANSIBLE_NOCOWS: 1
+  group_vars:
+    all:
+      mongodb_users_changed_when: False
+      mongodb_instances:
+        - type: 'mongod'
+          state: 'present'
+          enabled: True
+          authentication_key: 'foo'
+          config:
+            storage:
+              dbPath: "{{ mongodb_base_folders_paths.data }}/foo"
+              journal:
+                enabled: True
+            systemLog:
+              destination: 'file'
+              logAppend: True
+              path: "{{ mongodb_base_folders_paths.log }}/mongod_27017.log"
+            net:
+              port: 27017
+              bindIp: '127.0.0.1'
+        - type: 'mongod'
+          state: 'present'
+          enabled: False
+          authentication_key: 'foo'
+          user: 'bar'
+          group: 'bar'
+          config:
+            storage:
+              dbPath: "{{ mongodb_base_folders_paths.data }}/bar"
+              journal:
+                enabled: True
+            systemLog:
+              destination: 'file'
+              logAppend: True
+              path: "{{ mongodb_base_folders_paths.log }}/mongod_27018.log"
+            net:
+              port: 27018
+              bindIp: '127.0.0.1'
+        - type: 'mongos'
+          state: 'present'
+          enabled: True
+          authentication_key: 'foo'
+          user: 'foobar'
+          group: 'foobar'
+          config:
+            sharding:
+              configDB: 'foo/localhost:27019'
+            systemLog:
+              destination: 'file'
+              logAppend: True
+              path: "{{ mongodb_base_folders_paths.log }}/mongos_27019.log"
+            net:
+              port: 27019
+              bindIp: '127.0.0.1'
+      mongodb_users:
+        - user: 'foo'
+          password: 'bar'
+          database: 'admin'
+          login_port: 27017
+        - user: 'foobar'
+          password: 'bar'
+          database: 'foobar_db'
+          login_port: 27017
+          login_user: 'foo'
+          login_password: 'bar'
+          login_database: 'admin'
+  host_vars:
+    mongodb-ent-docker-xenial:
+      mongodb_edition: 'enterprise'
+    mongodb-ent-vagrant-xenial:
+      mongodb_edition: 'enterprise'
+dependency:
+  name: 'galaxy'
+driver:
+  name: 'docker'
+docker:
+  containers:
+    - name: 'mongodb-org-docker-xenial'
+      image: 'infopen/ubuntu-xenial-ssh-py27'
+      image_version: '0.2.0'
+      privileged: True
+      hostname: 'mongodb-org-docker-xenial'
+    - name: 'mongodb-ent-docker-xenial'
+      image: 'infopen/ubuntu-xenial-ssh-py27'
+      image_version: '0.2.0'
+      privileged: True
+      hostname: 'mongodb-ent-docker-xenial'
+molecule:
+  ignore_paths:
+    - '.git'
+    - '.molecule'
+    - '.tox'
+    - '.vagrant'
+    - 'roles'
+vagrant:
+  platforms:
+    - name: 'xenial'
+      box: 'ubuntu/xenial64'
+      linked_clone: True
+  providers:
+    - name: 'virtualbox'
+      type: 'virtualbox'
+      options:
+        memory: 512
+        cpus: 1
+  instances:
+    - name: 'mongodb-org-vagrant'
+      interfaces:
+        - network_name: 'private_network'
+          type: 'dhcp'
+          auto_config: True
+      options:
+        append_platform_to_hostname: True
+    - name: 'mongodb-ent-vagrant'
+      interfaces:
+        - network_name: 'private_network'
+          type: 'dhcp'
+          auto_config: True
+      options:
+        append_platform_to_hostname: True
+verifier:
+  name: 'testinfra'
+  options:
+    sudo: True
