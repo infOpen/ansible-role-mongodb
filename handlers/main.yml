@@ -9,8 +9,8 @@
     state: 'restarted'
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ (item.state | default('present')) == 'present' }}"
-    - "{{ item.enabled | default(True) }}"
+    - "(item.state | default('present')) == 'present'"
+    - "item.enabled | default(True)"
 
 
 - name: 'Restart all mongod instances'
@@ -20,9 +20,9 @@
     state: 'restarted'
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ (item.state | default('present')) == 'present' }}"
-    - "{{ item.enabled | default(True) }}"
-    - "{{ item.type == 'mongod' }}"
+    - "(item.state | default('present')) == 'present'"
+    - "item.enabled | default(True)"
+    - "item.type == 'mongod'"
 
 
 - name: 'Restart all mongos instances'
@@ -32,6 +32,6 @@
     state: 'restarted'
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ (item.state | default('present')) == 'present' }}"
-    - "{{ item.enabled | default(True) }}"
-    - "{{ item.type == 'mongos' }}"
+    - "(item.state | default('present')) == 'present'"
+    - "item.enabled | default(True)"
+    - "item.type == 'mongos'"
