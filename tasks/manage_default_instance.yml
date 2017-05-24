@@ -7,7 +7,7 @@
     name: "{{ mongodb_default_instance.service_name }}"
     enabled: False
     state: 'stopped'
-  when: "{{ mongodb_default_instance_disabled }}"
+  when: 'mongodb_default_instance_disabled'
 
 
 - name: 'CONFIG | DEFAULT INSTANCE | Remove default instance configuration and service files'
@@ -15,4 +15,4 @@
     name: "{{ item }}"
     state: 'absent'
   with_items: "{{ mongodb_default_instance.files }}"
-  when: "{{ mongodb_default_instance_removed }}"
+  when: 'mongodb_default_instance_removed'
