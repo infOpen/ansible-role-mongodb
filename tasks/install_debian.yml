@@ -22,7 +22,7 @@
 - name: 'INSTALL | APT | Update cache if repository file updated'
   apt:
     update_cache: True
-  when: "{{ mongodb_check_repository_file | changed }}"
+  when: "mongodb_check_repository_file.changed"
 
 
 - name: 'INSTALL | APT | Install "pymongo"'
@@ -32,7 +32,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
   with_items: "{{ mongodb_os_packages_pymongo }}"
-  when: "{{ mongodb_install_pymongo_method == 'os' }}"
+  when: "mongodb_install_pymongo_method == 'os'"
 
 
 - name: 'INSTALL | PIP | Install pymongo'
@@ -40,7 +40,7 @@
     name: "{{ item.name }}"
     version: "{{ item.version | default(omit) }}"
   with_items: "{{ mongodb_pip_packages_pymongo }}"
-  when: "{{ mongodb_install_pymongo_method == 'pip' }}"
+  when: "mongodb_install_pymongo_method == 'pip'"
 
 
 - name: 'INSTALL | APT | Install all packages'
@@ -52,7 +52,7 @@
     force: "{{ mongodb_apt_force }}"
   notify: 'Restart all mongo instances'
   with_items: "{{ mongodb_packages_all }}"
-  when: "{{ mongodb_install_all }}"
+  when: 'mongodb_install_all'
 
 
 - name: 'INSTALL | APT | Install server packages'
@@ -65,8 +65,8 @@
   notify: 'Restart all mongod instances'
   with_items: "{{ mongodb_packages_server }}"
   when:
-    - "{{ not mongodb_install_all }}"
-    - "{{ mongodb_install_server }}"
+    - 'not mongodb_install_all'
+    - 'mongodb_install_server'
 
 
 - name: 'INSTALL | APT | Install mongos packages'
@@ -79,8 +79,8 @@
   notify: 'Restart all mongos instances'
   with_items: "{{ mongodb_packages_mongos }}"
   when:
-    - "{{ not mongodb_install_all }}"
-    - "{{ mongodb_install_mongos }}"
+    - 'not mongodb_install_all'
+    - 'mongodb_install_mongos'
 
 
 - name: 'INSTALL | APT | Install shell packages'
@@ -92,8 +92,8 @@
     force: "{{ mongodb_apt_force }}"
   with_items: "{{ mongodb_packages_shell }}"
   when:
-    - "{{ not mongodb_install_all }}"
-    - "{{ mongodb_install_shell }}"
+    - 'not mongodb_install_all'
+    - 'mongodb_install_shell'
 
 
 - name: 'INSTALL | APT | Install tools packages'
@@ -105,5 +105,5 @@
     force: "{{ mongodb_apt_force }}"
   with_items: "{{ mongodb_packages_tools }}"
   when:
-    - "{{ not mongodb_install_all }}"
-    - "{{ mongodb_install_tools }}"
+    - 'not mongodb_install_all'
+    - 'mongodb_install_tools'
