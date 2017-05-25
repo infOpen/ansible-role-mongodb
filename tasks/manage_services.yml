@@ -11,7 +11,7 @@
     mode: '0400'
   register: 'mongodb_check_upstart_files'
   with_items: "{{ mongodb_instances }}"
-  when: "{{ mongodb_is_upstart_management }}"
+  when: 'mongodb_is_upstart_management'
 
 
 - name: 'CONFIG | SYSTEMD SERVICES | Create services files'
@@ -23,7 +23,7 @@
     mode: '0400'
   register: 'mongodb_check_systemd_files'
   with_items: "{{ mongodb_instances }}"
-  when: "{{ mongodb_is_systemd_management }}"
+  when: 'mongodb_is_systemd_management'
 
 
 - name: 'CONFIG | ALL SERVICES | Manage services settings'
@@ -42,7 +42,7 @@
     group: 'root'
     mode: '0700'
   register: 'mongodb_check_hugepage_service_file'
-  when: "{{ mongodb_manage_hugepage_settings }}"
+  when: 'mongodb_manage_hugepage_settings'
 
 
 - name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings with Ansible != 2.2'
@@ -52,11 +52,9 @@
     enabled: True
   register: 'mongodb_check_hugepage_service_state'
   when:
-    - "{{ mongodb_manage_hugepage_settings }}"
-    - "{{
-          ((ansible_version.full | version_compare('2.2', '<'))
-          or (ansible_version.full | version_compare('2.3', '>=')))
-      }}"
+    - 'mongodb_manage_hugepage_settings'
+    - "((ansible_version.full | version_compare('2.2', '<'))
+          or (ansible_version.full | version_compare('2.3', '>=')))"
 
 
 - name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings with Ansible == 2.2'
@@ -67,6 +65,6 @@
     use: 'service'
   register: 'mongodb_check_hugepage_service_state'
   when:
-    - "{{ mongodb_manage_hugepage_settings }}"
-    - "{{ ansible_version.full | version_compare('2.2', '>=') }}"
-    - "{{ ansible_version.full | version_compare('2.3', '<') }}"
+    - 'mongodb_manage_hugepage_settings'
+    - "ansible_version.full | version_compare('2.2', '>=')"
+    - "ansible_version.full | version_compare('2.3', '<')"

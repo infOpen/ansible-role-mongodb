@@ -24,8 +24,8 @@
     system: True
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ item.user is defined }}"
-    - "{{ item.user != '' }}"
+    - 'item.user is defined'
+    - "item.user != ''"
 
 
 - name: 'CONFIG | USER INSTANCES | Ensure data path exists'
@@ -36,7 +36,7 @@
     group: "{{ item.group | default(mongodb_group) }}"
     mode: '0750'
   with_items: "{{ mongodb_instances }}"
-  when: "{{ item.type == 'mongod' }}"
+  when: "item.type == 'mongod'"
 
 
 - name: 'CONFIG | USER INSTANCES | Ensure log dir is writable for mongodb_group'
@@ -54,7 +54,7 @@
     mode: '0400'
   register: 'mongodb_check_configuration_files'
   with_items: "{{ mongodb_instances }}"
-  when: "{{ (item.state | default('present')) == 'present' }}"
+  when: "(item.state | default('present')) == 'present'"
 
 
 - name: 'CONFIG | USER INSTANCES | Manage authentication_key files'
@@ -67,8 +67,8 @@
   register: 'mongodb_check_key_files'
   with_items: "{{ mongodb_instances }}"
   when:
-    - "{{ (item.state | default('present')) == 'present' }}"
-    - "{{ (item.authentication_key | default('')) != '' }}"
+    - "(item.state | default('present')) == 'present'"
+    - "(item.authentication_key | default('')) != ''"
 
 
 - name: 'CONFIG | USER INSTANCES | Manage logrotate configuration'

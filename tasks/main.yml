@@ -37,22 +37,20 @@
     - "{{ mongodb_check_upstart_files.results }}"
     - "{{ mongodb_check_systemd_files.results }}"
   when:
-    - "{{
-          item.0.changed
-          or item.1.changed
-          or item.2.changed
-          or item.3.changed
-          or mongodb_check_hugepage_service_file.changed
-          or mongodb_check_hugepage_service_state.changed
-      }}"
-    - "{{ (item.0.item.state | default('present')) == 'present' }}"
-    - "{{ item.0.item.enabled | default(True) }}"
+    - "item.0.changed
+        or item.1.changed
+        or item.2.changed
+        or item.3.changed
+        or mongodb_check_hugepage_service_file.changed
+        or mongodb_check_hugepage_service_state.changed"
+    - "(item.0.item.state | default('present')) == 'present'"
+    - "item.0.item.enabled | default(True)"
 
 
 - name: 'USER | Manage users'
   become: True
   no_log: True
-  changed_when: "{{ mongodb_users_changed_when }}"
+  changed_when: "mongodb_users_changed_when"
   mongodb_user:
     login_database: "{{ item.login_database | default(omit) }}"
     login_host: "{{ item.login_host | default(omit) }}"
