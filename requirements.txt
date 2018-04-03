@@ -1,4 +1,4 @@
-docker==3.1.1
+docker==3.2.1
 molecule==1.25.0
 pymongo==3.6.1
 pytest==3.4.2
