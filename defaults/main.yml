@@ -7,7 +7,7 @@
 # * org (community)
 # * enterprise
 mongodb_edition: 'org'
-mongodb_version: '3.4'
+mongodb_version: '4.0'
 
 mongodb_repository_fqdn:
   org: 'repo.mongodb.org'

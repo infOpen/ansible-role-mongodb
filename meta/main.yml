@@ -5,12 +5,20 @@ galaxy_info:
   description: 'Ansible role to install and configure MongoDB'
   company: 'Infopen (http://www.infopen.pro)'
   license: 'MIT'
-  min_ansible_version: '2.1'
+  min_ansible_version: '2.5'
   github_branch: 'master'
   platforms:
+    - name: 'Debian'
+      versions:
+        - 'jessie'
+        - 'stretch'
+    - name: 'EL'
+      versions:
+        - '7'
     - name: 'Ubuntu'
       versions:
         - 'xenial'
+        - 'bionic'
   galaxy_tags:
     - 'database'
     - 'nosql'
