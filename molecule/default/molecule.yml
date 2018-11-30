@@ -1,0 +1,191 @@
+---
+
+dependency:
+  name: 'galaxy'
+driver:
+  name: 'docker'
+lint:
+  name: 'yamllint'
+platforms:
+  - name: "mongodb-org-docker-centos7"
+    image: 'centos/systemd:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_org'
+      - 'os_family_redhat'
+  - name: "mongodb-org-docker-jessie"
+    image: 'minimum2scp/systemd-jessie:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_org'
+      - 'os_family_debian'
+  - name: "mongodb-org-docker-stretch"
+    image: 'minimum2scp/systemd-stretch:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_org'
+      - 'os_family_debian'
+  - name: "mongodb-org-docker-xenial"
+    image: 'solita/ubuntu-systemd:16.04'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_org'
+      - 'os_family_debian'
+  - name: "mongodb-org-docker-bionic"
+    image: 'solita/ubuntu-systemd:18.04'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_org'
+      - 'os_family_debian'
+  - name: "mongodb-ent-docker-centos7"
+    image: 'centos/systemd:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_ent'
+      - 'os_family_redhat'
+  - name: "mongodb-ent-docker-jessie"
+    image: 'minimum2scp/systemd-jessie:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_ent'
+      - 'os_family_debian'
+  - name: "mongodb-ent-docker-stretch"
+    image: 'minimum2scp/systemd-stretch:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_ent'
+      - 'os_family_debian'
+  - name: "mongodb-ent-docker-xenial"
+    image: 'solita/ubuntu-systemd:16.04'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_ent'
+      - 'os_family_debian'
+  - name: "mongodb-ent-docker-bionic"
+    image: 'solita/ubuntu-systemd:18.04'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+    groups:
+      - 'mongodb_ent'
+      - 'os_family_debian'
+provisioner:
+  name: 'ansible'
+  lint:
+    name: 'ansible-lint'
+  inventory:
+    group_vars:
+      all:
+        mongodb_users_changed_when: False
+        mongodb_instances:
+          - type: 'mongod'
+            state: 'present'
+            enabled: True
+            authentication_key: 'foo'
+            config:
+              storage:
+                dbPath: "{{ mongodb_base_folders_paths.data }}/foo"
+                journal:
+                  enabled: True
+              systemLog:
+                destination: 'file'
+                logAppend: True
+                path: "{{ mongodb_base_folders_paths.log }}/mongod_27017.log"
+              net:
+                port: 27017
+                bindIp: '127.0.0.1'
+          - type: 'mongod'
+            state: 'present'
+            enabled: False
+            authentication_key: 'foo'
+            user: 'bar'
+            group: 'bar'
+            config:
+              storage:
+                dbPath: "{{ mongodb_base_folders_paths.data }}/bar"
+                journal:
+                  enabled: True
+              systemLog:
+                destination: 'file'
+                logAppend: True
+                path: "{{ mongodb_base_folders_paths.log }}/mongod_27018.log"
+              net:
+                port: 27018
+                bindIp: '127.0.0.1'
+          - type: 'mongos'
+            state: 'present'
+            enabled: True
+            authentication_key: 'foo'
+            user: 'foobar'
+            group: 'foobar'
+            config:
+              sharding:
+                configDB: 'foo/localhost:27019'
+              systemLog:
+                destination: 'file'
+                logAppend: True
+                path: "{{ mongodb_base_folders_paths.log }}/mongos_27019.log"
+              net:
+                port: 27019
+                bindIp: '127.0.0.1'
+        mongodb_users:
+          - user: 'foo'
+            password: 'bar'
+            database: 'admin'
+            login_port: 27017
+          - user: 'foobar'
+            password: 'bar'
+            database: 'foobar_db'
+            login_port: 27017
+            login_user: 'foo'
+            login_password: 'bar'
+            login_database: 'admin'
+    host_vars:
+      mongodb-ent-docker-jessie:
+        mongodb_edition: 'enterprise'
+      mongodb-ent-docker-stretch:
+        mongodb_edition: 'enterprise'
+      mongodb-ent-docker-xenial:
+        mongodb_edition: 'enterprise'
+      mongodb-ent-docker-bionic:
+        mongodb_edition: 'enterprise'
+      mongodb-ent-docker-centos7:
+        mongodb_edition: 'enterprise'
+scenario:
+  name: 'default'
+verifier:
+  name: 'testinfra'
+  additional_files_or_dirs:
+    - '../../tests'
+  lint:
+    name: 'flake8'
+  options:
+    sudo: True

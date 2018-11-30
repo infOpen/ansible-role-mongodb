@@ -2,32 +2,13 @@
 
 # Debian OS family specific vars
 
+_mongodb_dependencies:
+  - name: 'apt-transport-https'
+
 # Repository variables
-_mongodb_apt_keyserver: 'keyserver.ubuntu.com'
-_mongodb_apt_key: '0C49F3730359A14518585931BC711F9BA15703C6'
+_mongodb_gpg_keys:
+  - url: 'https://www.mongodb.org/static/pgp/server-4.0.asc'
 
-# Packages variables
-_mongodb_os_packages_pymongo:
-  - name: 'python-pymongo'
-_mongodb_packages_all:
-  - name: "mongodb-{{ mongodb_edition }}"
-_mongodb_packages_server:
-  - name: "mongodb-{{ mongodb_edition }}-server"
-_mongodb_packages_mongos:
-  - name: "mongodb-{{ mongodb_edition }}-mongos"
-_mongodb_packages_shell:
-  - name: "mongodb-{{ mongodb_edition }}-shell"
-_mongodb_packages_tools:
-  - name: "mongodb-{{ mongodb_edition }}-tools"
-
-# Main user variables
-_mongodb_user: 'mongodb'
-_mongodb_group: 'mongodb'
-
-# Path variables
-_mongodb_os_base_config_path: '/etc'
-_mongodb_os_base_data_path: '/var/lib'
-_mongodb_os_base_initd_path: '/etc/init.d'
-_mongodb_os_base_log_path: '/var/log'
-_mongodb_os_base_logrotate_path: '/etc/logrotate.d'
-_mongodb_os_base_run_path: '/var/run'
+_mongodb_repositories:
+  - repo: "deb https://{{ mongodb_repository_fqdn[mongodb_edition] }}/apt/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }}/mongodb-{{ mongodb_edition }}/{{ mongodb_version }} multiverse"
+    filename: "mongodb-{{ mongodb_edition }}"

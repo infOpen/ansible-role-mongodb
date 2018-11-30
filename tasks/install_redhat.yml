@@ -1,0 +1,87 @@
+---
+
+# RedHat family installation tasks
+
+- name: 'INSTALL | YUM | Install dependencies'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ mongodb_dependencies }}"
+
+
+- name: 'INSTALL | YUM | Configure repository'
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgkey: "{{ item.gpgkey }}"
+    gpgcheck: "{{ item.gpgcheck | default(True) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ mongodb_repositories }}"
+
+
+- name: 'INSTALL | YUM | Install "pymongo"'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ mongodb_os_packages_pymongo }}"
+  when: "mongodb_install_pymongo_method == 'os'"
+
+
+- name: 'INSTALL | PIP | Install pymongo'
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ mongodb_pip_packages_pymongo }}"
+  when: "mongodb_install_pymongo_method == 'pip'"
+
+
+- name: 'INSTALL | YUM | Install all packages'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  notify: 'Restart all mongo instances'
+  loop: "{{ mongodb_packages_all }}"
+  when: 'mongodb_install_all'
+
+
+- name: 'INSTALL | YUM | Install server packages'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  notify: 'Restart all mongod instances'
+  loop: "{{ mongodb_packages_server }}"
+  when:
+    - 'not mongodb_install_all'
+    - 'mongodb_install_server'
+
+
+- name: 'INSTALL | YUM | Install mongos packages'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  notify: 'Restart all mongos instances'
+  loop: "{{ mongodb_packages_mongos }}"
+  when:
+    - 'not mongodb_install_all'
+    - 'mongodb_install_mongos'
+
+
+- name: 'INSTALL | YUM | Install shell packages'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ mongodb_packages_shell }}"
+  when:
+    - 'not mongodb_install_all'
+    - 'mongodb_install_shell'
+
+
+- name: 'INSTALL | YUM | Install tools packages'
+  yum:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+  loop: "{{ mongodb_packages_tools }}"
+  when:
+    - 'not mongodb_install_all'
+    - 'mongodb_install_tools'

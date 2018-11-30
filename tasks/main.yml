@@ -3,27 +3,47 @@
 # Main tasks file for mongodb role
 
 - name: 'INIT | Manage variables to use for our target'
-  include: "{{ role_path }}/tasks/manage_variables.yml"
+  import_tasks: "{{ role_path }}/tasks/manage_variables.yml"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
+    - 'role::mongodb::init'
+    - 'role::mongodb::install'
 
 
 - name: 'INSTALL | Manage installation tasks for your OS family'
   become: True
   include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::install'
 
 
 - name: 'CONFIG | Manage default instance'
   become: True
   include: "{{ role_path }}/tasks/manage_default_instance.yml"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
+    - 'role::mongodb::install'
 
 
 - name: 'CONFIG | Manage user instances'
   become: True
   include: "{{ role_path }}/tasks/manage_user_instances.yml"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
+    - 'role::mongodb::install'
 
 
 - name: 'CONFIG | Manage services'
   become: True
   include: "{{ role_path }}/tasks/manage_services.yml"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
+    - 'role::mongodb::install'
 
 
 - name: 'CONFIG | Restart instance if change occured'
@@ -34,17 +54,20 @@
   with_together:
     - "{{ mongodb_check_configuration_files.results }}"
     - "{{ mongodb_check_key_files.results }}"
-    - "{{ mongodb_check_upstart_files.results }}"
     - "{{ mongodb_check_systemd_files.results }}"
   when:
     - "item.0.changed
         or item.1.changed
         or item.2.changed
-        or item.3.changed
         or mongodb_check_hugepage_service_file.changed
         or mongodb_check_hugepage_service_state.changed"
     - "(item.0.item.state | default('present')) == 'present'"
     - "item.0.item.enabled | default(True)"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
+    - 'role::mongodb::install'
+    - 'skip_ansible_lint'
 
 
 - name: 'USER | Manage users'
@@ -64,4 +87,7 @@
     roles: "{{ item.roles | default(omit) }}"
     state: "{{ item.state | default('present') }}"
     update_password: "{{ item.update_password | default('always') }}"
-  with_items: "{{ mongodb_users }}"
+  loop: "{{ mongodb_users }}"
+  tags:
+    - 'role::mongodb'
+    - 'role::mongodb::config'
