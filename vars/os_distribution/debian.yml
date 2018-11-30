@@ -1,0 +1,7 @@
+---
+
+# Debian OS distributions specific vars
+
+_mongodb_repositories:
+  - repo: "deb https://{{ mongodb_repository_fqdn[mongodb_edition] }}/apt/debian {{ ansible_distribution_release | lower }}/mongodb-{{ mongodb_edition }}/{{ mongodb_version }} main"
+    filename: "mongodb-{{ mongodb_edition }}"

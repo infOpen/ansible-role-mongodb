@@ -1,0 +1,12 @@
+---
+
+# RedHat OS family specific vars
+
+_mongodb_repositories:
+  - name: "mongodb-{{ mongodb_edition }}"
+    description: "Repository to install mongodb-{{ mongodb_edition }} {{ mongodb_version }}"
+    baseurl: "https://{{ mongodb_repository_fqdn[mongodb_edition] }}/yum/redhat/$releasever/mongodb-{{ mongodb_edition }}/{{ mongodb_version }}/x86_64/"
+    gpgkey: 'https://www.mongodb.org/static/pgp/server-4.0.asc'
+
+_mongodb_user: 'mongod'
+_mongodb_group: 'mongod'
