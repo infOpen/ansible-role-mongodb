@@ -10,9 +10,20 @@
       become: True
       raw: 'apt-get update -qq'
       changed_when: False
-    - name: 'PREREQUISITES | APT | Install python 2.7'
+    - name: 'PREREQUISITES | APT | Install python 2.7 lsb-release'
       become: True
-      raw: 'apt-get install -qq python2.7 python-pip'
+      raw: 'apt-get install -qq python2.7 python-pip lsb-release'
+      changed_when: False
+
+
+- name: 'Converge | RedHat family | Prerequisites tasks'
+  hosts: 'os_family_redhat'
+  roles:
+    - role: 'geerlingguy.repo-epel'
+  post_tasks:
+    - name: 'PREREQUISITES | YUM | Install python 2.7'
+      become: True
+      raw: 'yum install -y python2.7 python-pip'
       changed_when: False
 
 

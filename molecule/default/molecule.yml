@@ -15,6 +15,7 @@ platforms:
     privileged: True
     groups:
       - 'mongodb_org'
+      - 'os_family_redhat'
   - name: "mongodb-org-docker-jessie"
     image: 'minimum2scp/systemd-jessie:latest'
     command: '/sbin/init'
@@ -59,6 +60,7 @@ platforms:
     privileged: True
     groups:
       - 'mongodb_ent'
+      - 'os_family_redhat'
   - name: "mongodb-ent-docker-jessie"
     image: 'minimum2scp/systemd-jessie:latest'
     command: '/sbin/init'
@@ -187,3 +189,4 @@ verifier:
     name: 'flake8'
   options:
     sudo: True
+    vv: True

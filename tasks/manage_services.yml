@@ -2,18 +2,6 @@
 
 # Manage services
 
-- name: 'CONFIG | UPSTART SERVICES | Create init files'
-  template:
-    src: "{{ role_path }}/templates/services/upstart.conf.j2"
-    dest: "{{ mongodb_base_folders_paths.upstart }}/{{ item.type }}_{{ item.config.net.port }}.conf"
-    owner: 'root'
-    group: 'root'
-    mode: '0400'
-  register: 'mongodb_check_upstart_files'
-  with_items: "{{ mongodb_instances }}"
-  when: 'mongodb_is_upstart_management'
-
-
 - name: 'CONFIG | SYSTEMD SERVICES | Create services files'
   template:
     src: "{{ role_path }}/templates/services/systemd.service.j2"
@@ -45,26 +33,10 @@
   when: 'mongodb_manage_hugepage_settings'
 
 
-- name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings with Ansible != 2.2'
+- name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings'
   service:
     name: 'disable-transparent-hugepages'
     state: 'started'
     enabled: True
   register: 'mongodb_check_hugepage_service_state'
-  when:
-    - 'mongodb_manage_hugepage_settings'
-    - "((ansible_version.full | version_compare('2.2', '<'))
-          or (ansible_version.full | version_compare('2.3', '>=')))"
-
-
-- name: 'CONFIG | HUGEPAGE SERVICE | Manage service settings with Ansible == 2.2'
-  service:
-    name: 'disable-transparent-hugepages'
-    state: 'started'
-    enabled: True
-    use: 'service'
-  register: 'mongodb_check_hugepage_service_state'
-  when:
-    - 'mongodb_manage_hugepage_settings'
-    - "ansible_version.full | version_compare('2.2', '>=')"
-    - "ansible_version.full | version_compare('2.3', '<')"
+  when: 'mongodb_manage_hugepage_settings'

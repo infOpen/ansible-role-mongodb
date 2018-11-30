@@ -54,13 +54,11 @@
   with_together:
     - "{{ mongodb_check_configuration_files.results }}"
     - "{{ mongodb_check_key_files.results }}"
-    - "{{ mongodb_check_upstart_files.results }}"
     - "{{ mongodb_check_systemd_files.results }}"
   when:
     - "item.0.changed
         or item.1.changed
         or item.2.changed
-        or item.3.changed
         or mongodb_check_hugepage_service_file.changed
         or mongodb_check_hugepage_service_state.changed"
     - "(item.0.item.state | default('present')) == 'present'"
@@ -69,6 +67,7 @@
     - 'role::mongodb'
     - 'role::mongodb::config'
     - 'role::mongodb::install'
+    - 'skip_ansible_lint'
 
 
 - name: 'USER | Manage users'
@@ -88,7 +87,7 @@
     roles: "{{ item.roles | default(omit) }}"
     state: "{{ item.state | default('present') }}"
     update_password: "{{ item.update_password | default('always') }}"
-  with_items: "{{ mongodb_users }}"
+  loop: "{{ mongodb_users }}"
   tags:
     - 'role::mongodb'
     - 'role::mongodb::config'

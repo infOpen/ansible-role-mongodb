@@ -2,27 +2,30 @@
 
 # Debian family installation tasks
 
+- name: 'INSTALL | APT | Install dependencies'
+  apt:
+    name: "{{ item.name }}"
+    version: "{{ item.version | default(omit) }}"
+    update_cache: "{{ mongodb_apt_update_cache }}"
+    cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
+  loop: "{{ mongodb_dependencies }}"
+
+
 - name: 'INSTALL | APT | Add GPG key'
   apt_key:
-    id: "{{ mongodb_apt_key }}"
-    keyserver: "{{ mongodb_apt_keyserver }}"
-    state: 'present'
+    id: "{{ item.id | default(omit) }}"
+    keyserver: "{{ item.keyserver | default(omit) }}"
+    url: "{{ item.url | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ mongodb_gpg_keys }}"
 
 
 - name: 'INSTALL | APT | Configure repository'
-  template:
-    src: "{{ role_path }}/templates/apt_repository.list.j2"
-    dest: "/etc/apt/sources.list.d/{{ mongodb_apt_file_name }}"
-    owner: 'root'
-    group: 'root'
-    mode: "{{ mongodb_apt_file_mode }}"
-  register: 'mongodb_check_repository_file'
-
-
-- name: 'INSTALL | APT | Update cache if repository file updated'
-  apt:
-    update_cache: True
-  when: "mongodb_check_repository_file.changed"
+  apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.filename | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ mongodb_repositories }}"
 
 
 - name: 'INSTALL | APT | Install "pymongo"'
@@ -31,7 +34,7 @@
     version: "{{ item.version | default(omit) }}"
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
-  with_items: "{{ mongodb_os_packages_pymongo }}"
+  loop: "{{ mongodb_os_packages_pymongo }}"
   when: "mongodb_install_pymongo_method == 'os'"
 
 
@@ -39,7 +42,7 @@
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version | default(omit) }}"
-  with_items: "{{ mongodb_pip_packages_pymongo }}"
+  loop: "{{ mongodb_pip_packages_pymongo }}"
   when: "mongodb_install_pymongo_method == 'pip'"
 
 
@@ -51,7 +54,7 @@
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
   notify: 'Restart all mongo instances'
-  with_items: "{{ mongodb_packages_all }}"
+  loop: "{{ mongodb_packages_all }}"
   when: 'mongodb_install_all'
 
 
@@ -63,7 +66,7 @@
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
   notify: 'Restart all mongod instances'
-  with_items: "{{ mongodb_packages_server }}"
+  loop: "{{ mongodb_packages_server }}"
   when:
     - 'not mongodb_install_all'
     - 'mongodb_install_server'
@@ -77,7 +80,7 @@
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
   notify: 'Restart all mongos instances'
-  with_items: "{{ mongodb_packages_mongos }}"
+  loop: "{{ mongodb_packages_mongos }}"
   when:
     - 'not mongodb_install_all'
     - 'mongodb_install_mongos'
@@ -90,7 +93,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
-  with_items: "{{ mongodb_packages_shell }}"
+  loop: "{{ mongodb_packages_shell }}"
   when:
     - 'not mongodb_install_all'
     - 'mongodb_install_shell'
@@ -103,7 +106,7 @@
     update_cache: "{{ mongodb_apt_update_cache }}"
     cache_valid_time: "{{ mongodb_apt_cache_valid_time }}"
     force: "{{ mongodb_apt_force }}"
-  with_items: "{{ mongodb_packages_tools }}"
+  loop: "{{ mongodb_packages_tools }}"
   when:
     - 'not mongodb_install_all'
     - 'mongodb_install_tools'

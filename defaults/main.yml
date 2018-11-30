@@ -2,6 +2,8 @@
 
 # Defaults vars file for mongodb role
 
+mongodb_dependencies: "{{ _mongodb_dependencies | default([]) }}"
+
 # Choice your MongoDB edition
 # Possible choices:
 # * org (community)
@@ -13,29 +15,34 @@ mongodb_repository_fqdn:
   org: 'repo.mongodb.org'
   enterprise: 'repo.mongodb.com'
 
-# MongoDB APT installation variables
-mongodb_apt_keyserver: "{{ _mongodb_apt_keyserver | default ('') }}"
-mongodb_apt_key: "{{ _mongodb_apt_key | default('') }}"
-mongodb_apt_file_name: "mongodb-{{ mongodb_edition }}.list"
-mongodb_apt_file_mode: '0644'
-mongodb_apt_entries: "{{ _mongodb_apt_entries | default([]) }}"
-mongodb_apt_update_cache: True
+# MongoDB installation variables
+mongodb_gpg_keys: "{{ _mongodb_gpg_keys | default([]) }}"
+mongodb_repositories: "{{ _mongodb_repositories | default([]) }}"
+
+# APT specific
 mongodb_apt_cache_valid_time: 3600
 mongodb_apt_force: True
+mongodb_apt_update_cache: True
 
 
 # Pymongo management
-mongodb_os_packages_pymongo: "{{ _mongodb_os_packages_pymongo }}"
+mongodb_os_packages_pymongo:
+  - name: 'python-pymongo'
 mongodb_pip_packages_pymongo:
   - name: 'pymongo'
 
 
 # MongoDB packages
-mongodb_packages_all: "{{ _mongodb_packages_all }}"
-mongodb_packages_server: "{{ _mongodb_packages_server }}"
-mongodb_packages_mongos: "{{ _mongodb_packages_mongos }}"
-mongodb_packages_shell: "{{ _mongodb_packages_shell }}"
-mongodb_packages_tools: "{{ _mongodb_packages_tools }}"
+mongodb_packages_all:
+  - name: "mongodb-{{ mongodb_edition }}"
+mongodb_packages_server:
+  - name: "mongodb-{{ mongodb_edition }}-server"
+mongodb_packages_mongos:
+  - name: "mongodb-{{ mongodb_edition }}-mongos"
+mongodb_packages_shell:
+  - name: "mongodb-{{ mongodb_edition }}-shell"
+mongodb_packages_tools:
+  - name: "mongodb-{{ mongodb_edition }}-tools"
 
 
 # Roles to install
@@ -48,14 +55,18 @@ mongodb_install_tools: True
 
 
 # Default instance management
-mongodb_default_instance: "{{ _mongodb_default_instance }}"
+mongodb_default_instance:
+  service_name: 'mongod'
+  files:
+    - '/etc/mongod.conf'
+    - '/lib/systemd/system/mongod.service'
 mongodb_default_instance_disabled: True
 mongodb_default_instance_removed: False
 
 
 # Main user
-mongodb_user: "{{ _mongodb_user }}"
-mongodb_group: "{{ _mongodb_group }}"
+mongodb_user: "{{ _mongodb_user | default('mongodb') }}"
+mongodb_group: "{{ _mongodb_group | default('mongodb') }}"
 
 
 # MongoDB databases users
@@ -65,14 +76,13 @@ mongodb_users_changed_when: omit
 
 # Paths
 mongodb_base_folders_paths:
-  config: "{{ _mongodb_os_base_config_path }}/mongodb"
-  data: "{{ _mongodb_os_base_data_path }}/mongodb"
-  initd: "{{ _mongodb_os_base_initd_path }}"
-  log: "{{ _mongodb_os_base_log_path }}/mongodb"
-  logrotate: "{{ _mongodb_os_base_logrotate_path }}"
-  upstart: "{{ _mongodb_os_base_upstart_path | default('') }}"
-  run: "{{ _mongodb_os_base_run_path }}/mongodb"
-  systemd_services: "{{ _mongodb_os_base_systemd_services_path | default('') }}"
+  config: "{{ _mongodb_os_base_config_path | default('/etc') }}/mongodb"
+  data: "{{ _mongodb_os_base_data_path | default('/var/lib') }}/mongodb"
+  initd: "{{ _mongodb_os_base_initd_path | default('/etc/init.d') }}"
+  log: "{{ _mongodb_os_base_log_path | default('/var/log') }}/mongodb"
+  logrotate: "{{ _mongodb_os_base_logrotate_path | default('/etc/logrotate.d') }}"
+  run: "{{ _mongodb_os_base_run_path | default('/var/run') }}/mongodb"
+  systemd_services: "{{ _mongodb_os_base_systemd_services_path | default('/lib/systemd/system') }}"
 
 
 # MongoDB configuration
@@ -84,8 +94,7 @@ mongodb_instances:
 
 
 # Services management
-mongodb_is_upstart_management: "{{ _mongodb_is_upstart_management | default(False) }}"
-mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(False) }}"
+mongodb_is_systemd_management: "{{ _mongodb_is_systemd_management | default(True) }}"
 
 
 # Manage hugepage settings to prevent MongoDB warnings
