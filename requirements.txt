@@ -3,4 +3,4 @@ molecule==2.19.0
 pymongo==3.7.2
 pytest==4.0.1
 python-vagrant==0.5.15
-tox==3.5.3
+tox==3.16.1
