@@ -5,3 +5,17 @@
 _mongodb_repositories:
   - repo: "deb https://{{ mongodb_repository_fqdn[mongodb_edition] }}/apt/debian {{ ansible_distribution_release | lower }}/mongodb-{{ mongodb_edition }}/{{ mongodb_version }} main"
     filename: "mongodb-{{ mongodb_edition }}"
+
+# Default mongod configuration
+_mongodb_config_mongod:
+  storage:
+    dbPath: '/var/lib/mongodb'
+    journal:
+      enabled: True
+  systemLog:
+    destination: 'file'
+    logAppend: True
+    path: '/var/log/mongodb/mongod.log'
+  net:
+    port: 27017
+    bindIp: '127.0.0.1'
